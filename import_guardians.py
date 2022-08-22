@@ -57,7 +57,7 @@ def import_guardians():
     # import data from csv
     with open('resources/guardians.csv', newline='') as csvfile:
         guardian_reader = csv.reader(csvfile)
-        # skip header rows
+        # skip header row
         next(guardian_reader)
 
         for row in guardian_reader:
