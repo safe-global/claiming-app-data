@@ -1,0 +1,12 @@
+[
+    {
+        "account": "0xef8b878ef1b615bba4e9a6264036a8d718454879",
+        "chain_id": 4,
+        "contract": "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4",
+        "vesting_id": "0x73e76ad281b95dc5599d6bba1a40ae599d5b86551239fb7dd702431bf3b66e8b",
+        "duration_weeks": 416,
+        "start_date": 1531562400,
+        "amount": "1000000000000330000000",
+        "curve": 0
+    }
+]
