@@ -2,7 +2,7 @@
     {
         "account": "0x21c928904fa72dd364f74729d35803a09ec04e9d",
         "chain_id": 4,
-        "contract": "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4",
+        "contract": "0x6c6ea0b60873255bb670f838b03db9d9a8f045c4",
         "vesting_id": "0xf8a203f7dd8bf96586448f6321a0252ecefa3c0b582311366eb5e77ef0e18e4e",
         "duration_weeks": 416,
         "start_date": 1531562400,

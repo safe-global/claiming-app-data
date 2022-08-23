@@ -41,7 +41,7 @@ def import_airdrop(chain_id, contract, csvfilename):
                     ?, ?, ?, ?, ?, ?, ?, ?
                 )
                 ''',
-                (chain_id, contract, vesting_id, owner, duration, start_date_timestamp, amount, curve))
+                (chain_id, contract.lower(), vesting_id, owner.lower(), duration, start_date_timestamp, amount, curve))
             con.commit()
 
     con.close()
@@ -171,6 +171,7 @@ def export_manyfiles(directory):
             "amount": amount,
             "curve": curve
         }
+
         if account is None or account == prev_account:
             # account address still the same, meaning it gets multiple allocations
             allocations.append(allocation)
