@@ -113,11 +113,11 @@ def export_singlefile(jsonfile):
             chain_id, contract, vesting_id, account, duration_weeks, start_date, amount, curve = row
             allocation = {
                 "account": account,
-                "chain_id": chain_id,
+                "chainId": chain_id,
                 "contract": contract,
-                "vesting_id": vesting_id,
-                "duration_weeks": duration_weeks,
-                "start_date": start_date,
+                "vestingId": vesting_id,
+                "durationWeeks": duration_weeks,
+                "startDate": start_date,
                 "amount": amount,
                 "curve": curve
             }
@@ -163,11 +163,11 @@ def export_manyfiles(directory):
         chain_id, contract, vesting_id, account, duration_weeks, start_date, amount, curve = row
         allocation = {
             "account": account,
-            "chain_id": chain_id,
+            "chainId": chain_id,
             "contract": contract,
-            "vesting_id": vesting_id,
-            "duration_weeks": duration_weeks,
-            "start_date": start_date,
+            "vestingId": vesting_id,
+            "durationWeeks": duration_weeks,
+            "startDate": start_date,
             "amount": amount,
             "curve": curve
         }
@@ -194,5 +194,5 @@ def export_manyfiles(directory):
 if __name__ == '__main__':
     # import_airdrop(4, "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4", 'resources/user_airdrop.csv')
     # import_airdrop(4, "0x82F1267759e9Bea202a46f8FC04704b6A5E2Af77", 'resources/ecosystem_airdrop.csv')
-    # export_singlefile('resources/data/allocations.json')
+    export_singlefile('resources/data/allocations.json')
     export_manyfiles('resources/data/allocations')
