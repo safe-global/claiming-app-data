@@ -172,10 +172,12 @@ def export_manyfiles(directory):
             "curve": curve
         }
         if account is None or account == prev_account:
+            # account address still the same, meaning it gets multiple allocations
             allocations.append(allocation)
         else:
+            # dump allocations of the previous account
             if allocations:
-                with open(os.path.join(directory, f"{account}.json"), "w") as file:
+                with open(os.path.join(directory, f"{prev_account}.json"), "w") as file:
                     json.dump(allocations, file, indent=4)
 
             allocations = [allocation]
@@ -188,8 +190,8 @@ def export_manyfiles(directory):
             json.dump(allocations, file, indent=4)
     con.close()
 
-if _name__ == '__main__':
-    import_airdrop(4, "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4", 'resources/user_airdrop.csv')
-    import_airdrop(4, "0x82F1267759e9Bea202a46f8FC04704b6A5E2Af77", 'resources/ecosystem_airdrop.csv')
-    export_singlefile('resources/data/allocations.json')
+if __name__ == '__main__':
+    # import_airdrop(4, "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4", 'resources/user_airdrop.csv')
+    # import_airdrop(4, "0x82F1267759e9Bea202a46f8FC04704b6A5E2Af77", 'resources/ecosystem_airdrop.csv')
+    # export_singlefile('resources/data/allocations.json')
     export_manyfiles('resources/data/allocations')
