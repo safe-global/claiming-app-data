@@ -13,7 +13,8 @@ from vesting import Vesting
 
 
 def generate_vestings_data(db: orm.Session):
-
+    parse_vestings_csv(db, "user")
+    generate_and_add_proof(db, "user")
     parse_vestings_csv(db, "ecosystem")
     generate_and_add_proof(db, "ecosystem")
 
@@ -64,7 +65,7 @@ def export_data(db: orm.Session):
     if not os.path.exists("../resources/data/allocations"):
         os.makedirs("../resources/data/allocations")
 
-    vestings = list(map(map_vesting, db.query(VestingModel).group_by(VestingModel.owner)))
+    vestings = list(map(map_vesting, db.query(VestingModel).order_by(VestingModel.owner)))
 
     i = 0
     while i < len(vestings):
@@ -76,6 +77,7 @@ def export_data(db: orm.Session):
             vesting = vestings[i + 1]
             if vesting.account == vesting1.account:
                 vesting2 = vesting
+                i = i + 1
 
         vesting_data = VestingData(
             user=vesting1 if vesting1.type == "user" else vesting2,
