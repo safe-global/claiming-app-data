@@ -4,12 +4,12 @@ import json
 from json import JSONEncoder
 from datetime import datetime
 import time
-from hexbytes import HexBytes
 from database import get_db, create_db, VestingModel, ProofModel
 import sqlalchemy.orm as orm
 from csv_parser import parse_vestings_csv
 from proof_generator import generate_and_add_proof
-from vesting import Vesting
+from constants import *
+from web3 import Web3
 
 
 def generate_vestings_data(db: orm.Session):
@@ -20,7 +20,6 @@ def generate_vestings_data(db: orm.Session):
 
 
 def prepare_db():
-
     print(80 * "-")
     print(f"Creating database")
     print(80 * "-")
@@ -32,11 +31,26 @@ def prepare_db():
 
 
 def export_data(db: orm.Session):
-
     class VestingData:
-        def __init__(self, user, ecosystem):
-            self.user = user
-            self.ecosystem = ecosystem
+        def __init__(
+                self,
+                account,
+                chainId,
+                contract,
+                vestingId,
+                durationWeeks,
+                startDate,
+                amount,
+                curve
+        ):
+            self.account = account
+            self.chainId = chainId
+            self.contract = contract
+            self.vestingId = vestingId
+            self.durationWeeks = durationWeeks
+            self.startDate = startDate
+            self.amount = amount
+            self.curve = curve
 
     class VestingEncoder(JSONEncoder):
         def default(self, o):
@@ -52,17 +66,19 @@ def export_data(db: orm.Session):
         return HexBytes(proof.proof).hex()
 
     def map_vesting(model):
-        vesting = Vesting(
-            id=model.vesting_id,
-            type=model.type,
-            account=model.owner,
-            curveType=model.curve_type,
+        vesting_data = VestingData(
+            account=Web3.toChecksumAddress(model.owner),
+            chainId=4,
+            contract=Web3.toChecksumAddress(
+                ECOSYSTEM_AIRDROP_ADDRESS) if model.type == "ecosystem" else Web3.toChecksumAddress(
+                USER_AIRDROP_ADDRESS),
+            vestingId=model.vesting_id,
             durationWeeks=model.duration_weeks,
-            startDate=time.mktime(datetime.timetuple(model.start_date)),
+            startDate=int(time.mktime(datetime.timetuple(model.start_date))),
             amount=model.amount,
-            proof=list(map(map_proof, model.proofs))
+            curve=model.curve_type
         )
-        return vesting
+        return vesting_data
 
     print(80 * "-")
     print(f"Exporting vestings")
@@ -76,41 +92,36 @@ def export_data(db: orm.Session):
 
     vestings = list(map(map_vesting, db.query(VestingModel).order_by(VestingModel.owner)))
 
+    result = []
+
     i = 0
     while i < len(vestings):
 
-        vesting1 = vestings[i]
-        vesting2 = None
+        vesting_array = []
 
-        if i + 1 < len(vestings):
-            vesting = vestings[i + 1]
-            if vesting.account == vesting1.account:
-                vesting2 = vesting
-                i = i + 1
+        vesting = vestings[i]
 
-        vesting_data = VestingData(
-            user=vesting1 if vesting1.type == "user" else vesting2,
-            ecosystem=vesting2 if vesting1.type == "user" else vesting1
-        )
+        print(f"Writing {vesting.account} vestings to file")
 
-        if vesting_data.user:
-            vesting_data.user.type = None
-        if vesting_data.ecosystem:
-            vesting_data.ecosystem.type = None
+        vesting_array.append(vesting)
 
-        print(f"Writing {vesting1.account} vesting to file")
-        with open(f"../resources/data/allocations/{vesting1.account}.json", "w") as file:
-            file.write(json.dumps(vesting_data, indent=4, cls=VestingEncoder))
+        j = i + 1
+        while j < len(vestings) and vestings[j].account == vesting.account:
+            vesting_array.append(vestings[j])
+            j = j + 1
 
-        i = i + 1
+        result.append(vesting_array)
+        i = j
+
+    with open(f"../resources/data/allocations/snapshot_vestings.json", "w") as file:
+        file.write(json.dumps(result, indent=4, cls=VestingEncoder))
 
 
 if __name__ == '__main__':
+    # db = prepare_db()
 
-    db = prepare_db()
+    db = next(get_db())
 
-    generate_vestings_data(db)
+    # generate_vestings_data(db)
 
     export_data(db)
-
-
