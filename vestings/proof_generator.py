@@ -12,6 +12,7 @@ def generate_and_add_proof(db: orm.Session, type):
     vestings = db.query(VestingModel).filter(VestingModel.type == type)
     vesting_ids = list(map(lambda vesting: vesting.vesting_id, vestings))
 
+    i = 0
     for vesting in vestings:
 
         proof, root = merkle_proof.generate(vesting_ids, vesting.vesting_id)
@@ -31,4 +32,5 @@ def generate_and_add_proof(db: orm.Session, type):
 
             proof_index += 1
 
-            print(f"{proof_index}: {proof}")
+        i = i + 1
+        print(f"{i}: {proof}")
