@@ -13,7 +13,7 @@ EMPTY_HASH = Web3.solidityKeccak(['bytes'], [bytes(HexBytes("0x"))])
 
 class Vesting:
 
-    def __init__(self, id: str, type, account, curveType, durationWeeks, startDate, amount, proof: list):
+    def __init__(self, id: str, type, account, curveType, durationWeeks, startDate: int, amount, proof: list):
         self.id = id
         self.type = type
         self.account = account
