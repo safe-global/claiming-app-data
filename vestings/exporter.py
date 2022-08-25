@@ -20,6 +20,11 @@ def generate_vestings_data(db: orm.Session):
 
 
 def prepare_db():
+
+    print(80 * "-")
+    print(f"Creating database")
+    print(80 * "-")
+
     if os.path.exists("vestings.db"):
         os.remove("vestings.db")
     create_db()
@@ -59,6 +64,10 @@ def export_data(db: orm.Session):
         )
         return vesting
 
+    print(80 * "-")
+    print(f"Exporting vestings")
+    print(80 * "-")
+
     if os.path.exists("../resources/data/allocations"):
         shutil.rmtree("../resources/data/allocations")
 
@@ -89,6 +98,7 @@ def export_data(db: orm.Session):
         if vesting_data.ecosystem:
             vesting_data.ecosystem.type = None
 
+        print(f"Writing {vesting1.account} vesting to file")
         with open(f"../resources/data/allocations/{vesting1.account}.json", "w") as file:
             file.write(json.dumps(vesting_data, indent=4, cls=VestingEncoder))
 

@@ -5,6 +5,10 @@ import merkle_proof
 
 def generate_and_add_proof(db: orm.Session, type):
 
+    print(80 * "-")
+    print(f"Generating {type} vestings proofs")
+    print(80 * "-")
+
     vestings = db.query(VestingModel).filter(VestingModel.type == type)
     vesting_ids = list(map(lambda vesting: vesting.vesting_id, vestings))
 
@@ -26,3 +30,5 @@ def generate_and_add_proof(db: orm.Session, type):
             db.refresh(proof_model)
 
             proof_index += 1
+
+            print(f"{proof_index}: {proof}")
