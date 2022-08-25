@@ -1,7 +1,7 @@
-{
-  "0x1230b3d59858296a31053c1b8562ecf89a2f888b": [
+[
+  [
       {
-          "account": "0x1230b3d59858296a31053c1b8562ecf89a2f888b",
+          "account": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
           "chainId": 4,
           "contract": "0x6c6ea0b60873255bb670f838b03db9d9a8f045c4",
           "vestingId": "0xdbb66714cafdf8b770440e2998367a857d7e196de5e32265a1e84a89e87ea7a5",
@@ -11,7 +11,7 @@
           "curve": 0
       },
       {
-          "account": "0x1230b3d59858296a31053c1b8562ecf89a2f888b",
+          "account": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
           "chainId": 4,
           "contract": "0x6c6ea0b60873255bb670f838b03db9d9a8f045c4",
           "vestingId": "0x529b86d07d85e25d94d66fd024539cfe2d6675d723fcfc17590d1c82befbbf3f",
@@ -21,7 +21,7 @@
           "curve": 0
       },
       {
-          "account": "0x1230b3d59858296a31053c1b8562ecf89a2f888b",
+          "account": "0x1230B3d59858296A31053C1b8562Ecf89A2f888b",
           "chainId": 4,
           "contract": "0x82f1267759e9bea202a46f8fc04704b6a5e2af77",
           "vestingId": "0xef4f944af7f15d62be4d8422fd7a86cc101afe1054f8ff4bdaab4a90823b6fbb",
@@ -31,9 +31,9 @@
           "curve": 0
       }
   ],
-  "0x32d16878415bb29a3dc11b426e77450eba6ad2a5": [
+  [
       {
-          "account": "0x32d16878415bb29a3dc11b426e77450eba6ad2a5",
+          "account": "0x32d6F7bf55b6692E0d16bFB26317b7D36b494f4a",
           "chainId": 4,
           "contract": "0x6c6ea0b60873255bb670f838b03db9d9a8f045c4",
           "vestingId": "0xd6086cf00ae3d71874c637ddb158da2e8c0edb08d151f313ce3b30e792346e6e",
@@ -43,9 +43,9 @@
           "curve": 0
       }
   ],
-  "0x37b828802faea4244d176da386cf632f5bbc414f": [
+  [
       {
-          "account": "0x37b828802faea4244d176da386cf632f5bbc414f",
+          "account": "0x37b828802FAeA4244d176Da386CF632F5Bbc414F",
           "chainId": 4,
           "contract": "0x6c6ea0b60873255bb670f838b03db9d9a8f045c4",
           "vestingId": "0x5fc6d191edeb19ef2ab94ed1e83164524876d172ad88609d46a76acf9894bdb3",
@@ -55,7 +55,7 @@
           "curve": 0
       },
       {
-          "account": "0x37b828802faea4244d176da386cf632f5bbc414f",
+          "account": "0x37b828802FAeA4244d176Da386CF632F5Bbc414F",
           "chainId": 4,
           "contract": "0x82f1267759e9bea202a46f8fc04704b6a5e2af77",
           "vestingId": "0x157ca10a05bf06b5267451c855bf95b150020b34a723497a9f94c519d654a482",
@@ -65,9 +65,9 @@
           "curve": 0
       }
   ],
-  "0xa8ffd6b87388f8d5facfda0147d9b0da511539b6": [
+  [
       {
-          "account": "0xa8ffd6b87388f8d5facfda0147d9b0da511539b6",
+          "account": "0xA8FFD6B87388F8d5FACfDa0147d9B0Da511539b6",
           "chainId": 4,
           "contract": "0x82f1267759e9bea202a46f8fc04704b6a5e2af77",
           "vestingId": "0xc092b363f682403d9355aa6087b51a745f8283f44f9b91e11da9819a195c4bce",
