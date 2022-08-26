@@ -1,0 +1,29 @@
+[
+    {
+        "account": "0xE7dAa2Bc9214dD9E031Bec63746B69cB496Fa252",
+        "chainId": 4,
+        "contract": "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4",
+        "vestingId": "0x634f6c7c3e9cba9f1735ee732cfb964f7203fcbab7625dca456f3a04c235faff",
+        "durationWeeks": 416,
+        "startDate": 1531555200,
+        "amount": "1000000000000330000000",
+        "curve": 0,
+        "proof": [
+            "0xb806448a4ce8744f36b61fb4a45fca07264c6925f2c16893d344db04d857dccf",
+            "0x057d555ed554755ac63635cea8e8cc9346f941913782e99c80f03af1fc8dc867",
+            "0x329d94f3e5893f5ad59f00b6254ec8eee6888b42fbb194752f2de01667b084a3",
+            "0x795a911a3841e4e54a0f9dc2e1b7453a34c907a581ed6c35079dd54329fdf46f",
+            "0xd850611c1f1fce326871ac37e861e74cf552c1acd3da9128e07090e8e8a9ca23",
+            "0x00fa7b4b4069aa9f05d39a63f1d71d8327ef45725f994543b54016868396d425",
+            "0x7eac2d6753267f89e14b4a61cbccfe3e2352f9dfbdcad2a1fbea1220687ae504",
+            "0xc18b9d62357bd573023971952ba7f49e6a5e73e65236ac2a6af6912252e1cec9",
+            "0x4931c592b3f6e46824436fb99affaeb64e15b0766f9cbdc0e7fc3d4c99fce574",
+            "0xbb0fe91089e59588ac4d01b39371c2db0e144ec039b804e9d383feeafd374d14",
+            "0x7bd4bb7ea0f1af5eb0d5fa63856b3f685f4a56373d8a5720782d23a63a69dfaf",
+            "0xa420aeea82db79f9485ead4d251782d0df22835c5c2643169c3eb04b8e7ff58a",
+            "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+            "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470",
+            "0x63af4e18eb6e2998d99d03dada6c02d844efe3a3a449adc76ccfafd12c7aacf2"
+        ]
+    }
+]
