@@ -1,5 +1,6 @@
 [
     {
+        "tag": "user",
         "account": "0x1337cbF7188FfD546cCf6Fa3A4711B56C4295054",
         "chainId": 4,
         "contract": "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4",
