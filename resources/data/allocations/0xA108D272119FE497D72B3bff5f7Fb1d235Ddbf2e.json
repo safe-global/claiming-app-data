@@ -1,5 +1,6 @@
 [
     {
+        "tag": "user",
         "account": "0xA108D272119FE497D72B3bff5f7Fb1d235Ddbf2e",
         "chainId": 4,
         "contract": "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4",
@@ -27,6 +28,7 @@
         ]
     },
     {
+        "tag": "ecosystem",
         "account": "0xA108D272119FE497D72B3bff5f7Fb1d235Ddbf2e",
         "chainId": 4,
         "contract": "0x82F1267759e9Bea202a46f8FC04704b6A5E2Af77",
