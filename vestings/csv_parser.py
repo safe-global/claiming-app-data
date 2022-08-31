@@ -28,7 +28,7 @@ def parse_vestings_csv(db: orm.Session, type):
 
             owner = row["owner"]
             duration_weeks = row["duration"]
-            start_date = datetime.datetime.strptime(row["startDate"], "%Y-%m-%dT%H:%M:%S%z")
+            start_date = int(datetime.datetime.strptime(row["startDate"], "%Y-%m-%dT%H:%M:%S%z").timestamp())
             amount = row["amount"]
             curve_type = 0
 
