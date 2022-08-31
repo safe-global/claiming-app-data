@@ -169,4 +169,4 @@ if __name__ == '__main__':
 
     # generate_vestings_data(db)
 
-    export_data(db, True)
+    export_data(db, False)
