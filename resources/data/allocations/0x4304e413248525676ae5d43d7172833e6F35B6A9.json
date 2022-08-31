@@ -6,7 +6,7 @@
         "contract": "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4",
         "vestingId": "0x7348287f7412538d0cd070829910778c1cc4ba57a3b04b02d66fe746e97b5472",
         "durationWeeks": 416,
-        "startDate": 1531555200,
+        "startDate": 1531562400,
         "amount": "28322010000000000000000",
         "curve": 0,
         "proof": [
@@ -34,7 +34,7 @@
         "contract": "0x82F1267759e9Bea202a46f8FC04704b6A5E2Af77",
         "vestingId": "0x260b57e71708f0e4efb842155fb133e103e2f3f657166e80e9c19d69a3e82804",
         "durationWeeks": 416,
-        "startDate": 1531555200,
+        "startDate": 1531562400,
         "amount": "28322010000000000000000",
         "curve": 0,
         "proof": [
