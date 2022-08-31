@@ -19,7 +19,7 @@ class VestingModel(Base):
     owner = Column(String)
     curve_type = Column(Integer)
     duration_weeks = Column(Integer)
-    start_date = Column(DateTime)
+    start_date = Column(Integer) #DateTime looses zone info
     amount = Column(String)
 
     proofs = orm.relationship("ProofModel",  backref="vestings")
