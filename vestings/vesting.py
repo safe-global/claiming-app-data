@@ -40,7 +40,7 @@ class Vesting:
                 abi.encode(
                     ('bytes32', 'address', 'uint8', 'bool', 'uint16', 'uint64', 'uint128'),
                     (bytes(VESTING_TYPEHASH), self.account, self.curveType, False,
-                     int(self.durationWeeks), int(self.startDate.timestamp()), int(self.amount))
+                     int(self.durationWeeks), int(self.startDate), int(self.amount))
                 )
             ]
         )
