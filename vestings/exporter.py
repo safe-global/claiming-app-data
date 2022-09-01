@@ -161,10 +161,10 @@ def export_data(db: orm.Session, separate_files=False):
 
 
 if __name__ == '__main__':
-    # db = prepare_db()
+    db = prepare_db()
 
     db = next(get_db())
 
-    # generate_vestings_data(db)
+    generate_vestings_data(db)
 
     export_data(db, True)
