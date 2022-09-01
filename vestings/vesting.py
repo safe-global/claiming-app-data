@@ -56,6 +56,3 @@ class Vesting:
         )
 
         return HexBytes(vesting_id).hex()
-
-
-
