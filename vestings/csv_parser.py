@@ -4,6 +4,7 @@ from constants import *
 import csv
 import datetime
 from vesting import Vesting
+from web3 import Web3
 
 
 def parse_vestings_csv(db: orm.Session, type):
@@ -26,7 +27,7 @@ def parse_vestings_csv(db: orm.Session, type):
             if line_count == 0:
                 line_count += 1
 
-            owner = row["owner"]
+            owner = Web3.toChecksumAddress(row["owner"])
             duration_weeks = row["duration"]
             start_date = int(datetime.datetime.strptime(row["startDate"], "%Y-%m-%dT%H:%M:%S%z").timestamp())
             amount = row["amount"]

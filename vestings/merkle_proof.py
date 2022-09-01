@@ -1,11 +1,10 @@
 import math
-import sys
 from hexbytes import HexBytes
 from eth_abi import abi
 from web3 import Web3
 
 
-EMPTY_HASH = Web3.solidityKeccak(['bytes'], [bytes(HexBytes("0x"))])
+EMPTY_HASH = HexBytes(Web3.solidityKeccak(['bytes'], [bytes(HexBytes("0x"))])).hex()
 
 
 def combine_and_hash(leaf1: str, leaf2: str):
@@ -42,7 +41,7 @@ def generate(input, element=None):
                 proof.append(leaf1)
                 elements[int(i / 2)] = element
             else:
-                if int.from_bytes(bytes(HexBytes(leaf1)), sys.byteorder) < int.from_bytes(bytes(HexBytes(leaf2)), sys.byteorder):
+                if int.from_bytes(bytes(HexBytes(leaf1)), byteorder='big', signed=False) < int.from_bytes(bytes(HexBytes(leaf2)), byteorder='big', signed=False):
                     elements[int(i / 2)] = combine_and_hash(leaf1, leaf2)
                 else:
                     elements[int(i / 2)] = combine_and_hash(leaf2, leaf1)

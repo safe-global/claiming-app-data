@@ -106,14 +106,12 @@ def export_data(db: orm.Session, separate_files=False):
     def map_vesting_with_proof(model):
         vesting_data = VestingDataWithProof(
             tag=model.type,
-            account=Web3.toChecksumAddress(model.owner),
+            account=model.owner,
             chainId=4,
-            contract=Web3.toChecksumAddress(
-                ECOSYSTEM_AIRDROP_ADDRESS) if model.type == "ecosystem" else Web3.toChecksumAddress(
-                USER_AIRDROP_ADDRESS),
+            contract=ECOSYSTEM_AIRDROP_ADDRESS if model.type == "ecosystem" else USER_AIRDROP_ADDRESS,
             vestingId=model.vesting_id,
             durationWeeks=model.duration_weeks,
-            startDate=1531562400,#model.start_date,
+            startDate=model.start_date,
             amount=model.amount,
             curve=model.curve_type,
             proof=list(map(map_proof, model.proofs))
@@ -169,4 +167,4 @@ if __name__ == '__main__':
 
     # generate_vestings_data(db)
 
-    export_data(db, False)
+    export_data(db, True)
