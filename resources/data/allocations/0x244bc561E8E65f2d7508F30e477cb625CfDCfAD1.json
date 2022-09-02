@@ -3,7 +3,7 @@
         "tag": "ecosystem",
         "account": "0x244bc561E8E65f2d7508F30e477cb625CfDCfAD1",
         "chainId": 4,
-        "contract": "0x82F1267759e9Bea202a46f8FC04704b6A5E2Af77",
+        "contract": {},
         "vestingId": "0xcea45e2c727ccd98ddf14275879e04a4d2cc73e499fe11161a82d7f9999cb926",
         "durationWeeks": 416,
         "startDate": 1531562400,
@@ -11,10 +11,10 @@
         "curve": 0,
         "proof": [
             "0x157ca10a05bf06b5267451c855bf95b150020b34a723497a9f94c519d654a482",
-            "0x20c6c7d3f2baa9c0897ca7b129ea8b4be170d142ec60964fcd11e99f689edb55",
-            "0x3a8c41947c3d60b7c9356bec6a4696089bf730479d4975f76f246d13adcd0dd8",
-            "0x81ad9521f4503d9a58588ee00b45588316dbab40045d98ad41166a57e8ee6c50",
-            "0x3755b0c14b83a4e42b3d58febf9b819d98e438f2ba2154d6bc47fa4ba3c41b30"
+            "0xa738ae2d3898873eb86e3f75f4b2ae5546f96f01ab2e817bde38a0e93519416f",
+            "0x30b67be702e57780b619f25aca7cc4a6dafa86e86660d0b3218a1a7c81fafda4",
+            "0xf2ca4e739f88022e84b1289fb514899f092b1c38a8ab890b7896696bccc4e29e",
+            "0xa5a5a175bec6f721a354057fe4ad3d410a05b99c011e00fc5214ee93a9a7c2dd"
         ]
     }
 ]
