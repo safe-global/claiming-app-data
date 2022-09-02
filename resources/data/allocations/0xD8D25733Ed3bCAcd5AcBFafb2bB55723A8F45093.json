@@ -3,7 +3,7 @@
         "tag": "user",
         "account": "0xD8D25733Ed3bCAcd5AcBFafb2bB55723A8F45093",
         "chainId": 4,
-        "contract": "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4",
+        "contract": {},
         "vestingId": "0xff9ff096ca6178ad7f215944734853679fbe4a60fb03468eab75948081a2fde4",
         "durationWeeks": 416,
         "startDate": 1531562400,
@@ -11,20 +11,20 @@
         "curve": 0,
         "proof": [
             "0x5746c9ee24d411735c0acd7af4d97c68b4896182545986be5f7b135fa4ab625e",
-            "0xce018b9e647dead384a078fcf325357f6a126f550febef45612d41ccf787811b",
-            "0x409e50a755ed0e8c4cacc49dd133be33435b2efdb87671c1b7e07de4cf6d6e15",
-            "0xaf11e0cff51fd5ef9eafa183bd4b41f49a7e5fc533a8e288cd628f3b20cb7d91",
-            "0x6c27de57da6949318025e852f8323a722c838ef92c363c5038dd14a9a48bdaee",
-            "0x29869cacdf3c408929711d77ec6b602df867b6a64a6854e77a1134f5f77a4164",
-            "0x66e55f7e2921b3cba8a2b1ba1c2acb5fff6da70df2ba861a7c99a5b82f389b0a",
-            "0x0d22aa404f8d478bd572fb8774c0dfb55804866cf6b8c6cb3ddeb06172c2363e",
-            "0xf765902cde5090e329a351fd143bcd74898e9b6bd5e4e717fbe6897f624189a1",
-            "0x8d84c4716bdb4969098518252a0682ebe13cff5bccdc8db8eb81357606629cd3",
-            "0x5af8f6cd59a9838d7791e24f642f504754b032fb604fd34e69addbb9fe90e906",
-            "0x4126ccf138d0bf496b64341fabb245926b56da95f05f3da30cca0f818eae8ab4",
-            "0xfb53f71885d7026153b9ae3d243defb5a5afac963cf8b98e38ff4ff815a52e20",
-            "0x791267d6ca356bfcedbaed4ec881eb583c63ae6178ceab43be910f54a6219884",
-            "0x115ecd04abc5dff25699b5fe93195801615071ddbda1e92e0a3591795114ef74"
+            "0x675036d13cad3dee9dfe1f38e1c54d2e2b3aac87a1bbcbca56b2f276815e9fb6",
+            "0xb8719328b09aa8b38966309c432ca68c86ae4d2effe2dc65caad90f7a37d17e8",
+            "0xb8bbdef640c03f28477b118b36e090f90f200e3739d477bddf006a994e532ec7",
+            "0xa5b72cbc6bd594cc16486f79f32d638b4e0aa203ce4602f1ea1e1f0b895a0f5b",
+            "0x226bc4ccd6ce00b956d01178cb3155680ae391925d5c80b78815aca88c8fa8e8",
+            "0xb939135712398a0483a003ebafcab0e74b3827158f9a1963bb2fb54c0bd75fb5",
+            "0xb00e2f211a99eb66e194b3aa3bf0f81325f55a6a060ad4196a229f9f69022f01",
+            "0xa9c60112aa7858ea1ab298182f8fc6969607c41ebea42c3783196298c80261c9",
+            "0xa0ce67b04f5ceba21c42a59a073ce1d8aa976618ad79d56ff83d6e1e3d5a6a0c",
+            "0x8048b7ddb439730ce7217c9da89d54755b835c89b34aa964c3e1dc18c0deb2ef",
+            "0xc53c445980c246693da92776d36c4fccea1b36d32098948459c331321d85e6cc",
+            "0x28b06bd294019acdfa5bbae37d63a42956c5f7ec048ca7846ee68dcb6e6ebfdc",
+            "0x9aba625c72fecba7d9d941c24f0dec6e2ccc3eb5e8fb16387f0a0854fb660cbe",
+            "0xfe184da3981546ee7f116325cb9e4c20619398cb1b5592814a297045be298aa0"
         ]
     }
 ]
