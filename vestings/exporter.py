@@ -11,9 +11,9 @@ from web3 import Web3
 
 
 def generate_vestings_data(db: orm.Session):
-    parse_vestings_csv(db, "user")
+    parse_vestings_csv(db, "user", 4)
     generate_and_add_proof(db, "user")
-    parse_vestings_csv(db, "ecosystem")
+    parse_vestings_csv(db, "ecosystem", 4)
     generate_and_add_proof(db, "ecosystem")
 
 
@@ -28,7 +28,7 @@ def prepare_db():
     return next(get_db())
 
 
-def export_data(db: orm.Session, separate_files=False):
+def export_data(db: orm.Session, chain_id, separate_files=False):
     class VestingData:
         def __init__(
                 self,
@@ -91,10 +91,8 @@ def export_data(db: orm.Session, separate_files=False):
     def map_vesting(model):
         vesting_data = VestingData(
             account=Web3.toChecksumAddress(model.owner),
-            chainId=4,
-            contract=Web3.toChecksumAddress(
-                ECOSYSTEM_AIRDROP_ADDRESS) if model.type == "ecosystem" else Web3.toChecksumAddress(
-                USER_AIRDROP_ADDRESS),
+            chainId=chain_id,
+            contract=Web3.toChecksumAddress(ECOSYSTEM_AIRDROP_ADDRESS) if model.type == "ecosystem" else Web3.toChecksumAddress(USER_AIRDROP_ADDRESS),
             vestingId=model.vesting_id,
             durationWeeks=model.duration_weeks,
             startDate=model.start_date,
@@ -107,8 +105,8 @@ def export_data(db: orm.Session, separate_files=False):
         vesting_data = VestingDataWithProof(
             tag=model.type,
             account=model.owner,
-            chainId=4,
-            contract=ECOSYSTEM_AIRDROP_ADDRESS if model.type == "ecosystem" else USER_AIRDROP_ADDRESS,
+            chainId=chain_id,
+            contract=Web3.toChecksumAddress(ECOSYSTEM_AIRDROP_ADDRESS) if model.type == "ecosystem" else Web3.toChecksumAddress(USER_AIRDROP_ADDRESS),
             vestingId=model.vesting_id,
             durationWeeks=model.duration_weeks,
             startDate=model.start_date,
@@ -126,9 +124,16 @@ def export_data(db: orm.Session, separate_files=False):
         shutil.rmtree("../resources/data/allocations")
 
     if not os.path.exists("../resources/data/allocations"):
-        os.makedirs("../resources/data/allocations")
+        os.makedirs(f"../resources/data/allocations/{chain_id}")
 
-    vestings = list(map(map_vesting_with_proof if separate_files else map_vesting, db.query(VestingModel).order_by(VestingModel.owner)))
+    vestings = list(
+        map(
+            map_vesting_with_proof if separate_files else map_vesting,
+            db.query(VestingModel)
+            .where(VestingModel.chain_id == chain_id)
+            .order_by(VestingModel.owner)
+        )
+    )
 
     result = []
 
@@ -151,7 +156,7 @@ def export_data(db: orm.Session, separate_files=False):
         if not separate_files:
             result.append(vesting_array)
         else:
-            with open(f"../resources/data/allocations/{vesting.account}.json", "w") as file:
+            with open(f"../resources/data/allocations/{chain_id}/{vesting.account}.json", "w") as file:
                 file.write(json.dumps(vesting_array, indent=4, cls=VestingEncoder))
         i = j
 
@@ -161,10 +166,11 @@ def export_data(db: orm.Session, separate_files=False):
 
 
 if __name__ == '__main__':
+
     db = prepare_db()
 
     db = next(get_db())
 
     generate_vestings_data(db)
 
-    export_data(db, True)
+    export_data(db, 4, True)
