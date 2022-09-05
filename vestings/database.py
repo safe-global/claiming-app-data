@@ -15,6 +15,7 @@ class VestingModel(Base):
     __tablename__ = "vestings"
 
     vesting_id = Column(String, primary_key=True, index=True)
+    chain_id = Column(Integer)
     type = Column(String)
     owner = Column(String)
     curve_type = Column(Integer)

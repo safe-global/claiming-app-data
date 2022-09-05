@@ -7,7 +7,7 @@ from vesting import Vesting
 from web3 import Web3
 
 
-def parse_vestings_csv(db: orm.Session, type):
+def parse_vestings_csv(db: orm.Session, type, chain_id):
     vesting_file: str
 
     if type == "user":
@@ -34,11 +34,12 @@ def parse_vestings_csv(db: orm.Session, type):
             curve_type = 0
 
             vesting = Vesting(None, type, owner, curve_type, duration_weeks, start_date, amount, None)
-            vesting_id = vesting.calculateHash(USER_AIRDROP_ADDRESS, 4) if type == "user" \
-                else vesting.calculateHash(ECOSYSTEM_AIRDROP_ADDRESS, 4)
+            vesting_id = vesting.calculateHash(USER_AIRDROP_ADDRESS, chain_id) if type == "user" \
+                else vesting.calculateHash(ECOSYSTEM_AIRDROP_ADDRESS, chain_id)
 
             vesting_model = VestingModel(
                 vesting_id=vesting_id,
+                chain_id=chain_id,
                 type=type,
                 owner=owner,
                 curve_type=curve_type,
