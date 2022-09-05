@@ -1,0 +1,48 @@
+[
+    {
+        "tag": "user",
+        "account": "0x2b6bd3167E2f76bA05b114BDc01DC70F5810835A",
+        "chainId": 4,
+        "contract": "0x6C6ea0B60873255bb670F838b03db9d9a8f045c4",
+        "vestingId": "0x9d582ba3a3ee5d00ccbfedd971aff2b8c58437d45a861ea5ac9e3504c0cf1c75",
+        "durationWeeks": 416,
+        "startDate": 1531562400,
+        "amount": "24148760000000000000000",
+        "curve": 0,
+        "proof": [
+            "0x458be458f3d073f9ca145b7e3f25f827f10f0272ab26e8db57ad212e718f20df",
+            "0x0422a25e77514ffcaa4cc0e30a349915a6a9cb1ada4cdd92ab272122b71c1853",
+            "0x88fe1fda17a9080dd18788241dd0b26751709188c0333eb55e48c285ec6c567f",
+            "0xb01a21325f4157f753c8b8157fb90899479aacd348d287f9db1a46ca55a86afc",
+            "0x2bb7c259d9c975429edf3077ab69958cbdd01893c5e05f894ce30b4f1091ef72",
+            "0xfa799f95ddea43997e813c56cff91ea534b3dfaa16f783de0617293b1733198c",
+            "0x49730b57dac635185f421b65712b790439c565685a91256f8143da0258c6b5eb",
+            "0x3f4e12da98a09443c66f5b17d655d67ea01d9402b94d6e3f74ddd6f9517b5218",
+            "0x2fba8c6a6abe5e75bdae72a5d82673d5c162e0643d806fa272b5ffcee4b9066e",
+            "0xa292b0ba688cb3929bcd4ed25a39009accde44250ffca84edc33124d44458f78",
+            "0x5227d068a114125d30fda4c6f0e9246f6ae06b48648f1757df2d2a23e144bb9a",
+            "0xab74759c1213376a878564e58beb94d22a7f16ec73fd2daffef53f732004b651",
+            "0x5e0363b0793b603e910e496c2f7438edf5f4f8806a78a4e1b63196f8d191c08c",
+            "0x9aba625c72fecba7d9d941c24f0dec6e2ccc3eb5e8fb16387f0a0854fb660cbe",
+            "0xfe184da3981546ee7f116325cb9e4c20619398cb1b5592814a297045be298aa0"
+        ]
+    },
+    {
+        "tag": "ecosystem",
+        "account": "0x2b6bd3167E2f76bA05b114BDc01DC70F5810835A",
+        "chainId": 4,
+        "contract": "0x82F1267759e9Bea202a46f8FC04704b6A5E2Af77",
+        "vestingId": "0x21e9d3fe21e5661e0949244b918c6dfc746bab4492127e5dadc5e36fcf9228db",
+        "durationWeeks": 416,
+        "startDate": 1531562400,
+        "amount": "24148760000000000000000",
+        "curve": 0,
+        "proof": [
+            "0x4e7b39b45c96ea4cbf67e8269af88bd3922a307f2ed2f91d13ccd2a414de8f81",
+            "0x309873403702752c83a08eddd6f275b1043b8d2cd43a5c0eff5b66fed8842fb9",
+            "0xa34319295c0467d81d96984ffaf5a9cea7978c96669c57b41f5acf773891c298",
+            "0x5860f43b3d14d2d980dd6b91c74c87f11a2ca2f2c0635530bf44699960515a79",
+            "0x96f4621677d9c5bacff28694ee6f7cff0a729dc8dc31e8be38f7872fb96f77db"
+        ]
+    }
+]
