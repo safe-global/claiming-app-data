@@ -542,5 +542,13 @@
         "image": "0xdab0d648a2a771e6952916A822dddf738b535f5A_3x.png",
         "reason": "🔥_🔥 is excited to help lead the Safe ecosystem towards a decentralised community centric future.\n\nContributing to meaningful governance experimentation is what drives 🔥_🔥.",
         "contribution": "Building token and governance designs across the ecosystem, often pointing towards safe infrastructure."
+    },
+     {
+        "name": "Liliya's Test Delegate",
+        "address": "0x65F8236309e5A99Ff0d129d04E486EBCE20DC7B0",
+        "ens": "liltestowner.eth",
+        "image": "",
+        "reason": "I want to check if the delegates list will be updated with a new delegate",
+        "contribution": "let's play with the delegate : add , remove and edit "
     }
 ]
