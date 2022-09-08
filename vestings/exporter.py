@@ -1,3 +1,5 @@
+from enum import Enum
+import argparse
 import os
 import shutil
 import json
@@ -10,25 +12,24 @@ from constants import *
 from web3 import Web3
 
 
-def generate_vestings_data(db: orm.Session):
-    parse_vestings_csv(db, "user", 4)
-    generate_and_add_proof(db, "user")
-    parse_vestings_csv(db, "ecosystem", 4)
-    generate_and_add_proof(db, "ecosystem")
-
-
-def prepare_db():
+def prepare_db(db_file):
     print(80 * "-")
     print(f"Creating database")
     print(80 * "-")
+    create_db(db_file)
+    
 
-    if os.path.exists("vestings.db"):
-        os.remove("vestings.db")
-    create_db()
-    return next(get_db())
+def process_vestings(db: orm.Session, chain_id):
+    parse_vestings_csv(db, "user", chain_id)
+    parse_vestings_csv(db, "ecosystem", chain_id)
 
 
-def export_data(db: orm.Session, chain_id, separate_files=False):
+def generate_proofs(db: orm.Session, chain_id):
+    generate_and_add_proof(db, "user", chain_id)
+    generate_and_add_proof(db, "ecosystem", chain_id)
+
+
+def export_data(db: orm.Session, chain_id, output_directory, export_type="snapshot"):
     class VestingData:
         def __init__(
                 self,
@@ -128,7 +129,7 @@ def export_data(db: orm.Session, chain_id, separate_files=False):
 
     vestings = list(
         map(
-            map_vesting_with_proof if separate_files else map_vesting,
+            map_vesting_with_proof if export_type == "snapshot" else map_vesting,
             db.query(VestingModel)
             .where(VestingModel.chain_id == chain_id)
             .order_by(VestingModel.owner)
@@ -153,24 +154,125 @@ def export_data(db: orm.Session, chain_id, separate_files=False):
             vesting_array.append(vestings[j])
             j = j + 1
 
-        if not separate_files:
+        if export_type == "snapshot":
             result.append(vesting_array)
         else:
-            with open(f"../resources/data/allocations/{chain_id}/{vesting.account}.json", "w") as file:
+            with open(f"{output_directory}/{vesting.account}.json", "w") as file:
                 file.write(json.dumps(vesting_array, indent=4, cls=VestingEncoder))
         i = j
 
-    if not separate_files:
+    if export_type == "snapshot":
         with open(f"../resources/data/snapshot-allocations-test.json", "w") as file:
             file.write(json.dumps(result, indent=4, cls=VestingEncoder))
 
 
+class Export(Enum):
+    none = 'none'
+    snapshot = 'snapshot'
+    allocations = 'allocations'
+
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def from_string(s):
+        try:
+            return Export[s]
+        except KeyError:
+            raise ValueError()
+
+    @staticmethod
+    def argparse(s):
+        try:
+            return Export[s.upper()]
+        except KeyError:
+            return s
+
+
 if __name__ == '__main__':
 
-    db = prepare_db()
+    parser = argparse.ArgumentParser(description='Vesting data converter and exporter.')
 
-    db = next(get_db())
+    parser.add_argument(
+        '--chain-id',
+        dest='chain_id',
+        help='chain id'
+    )
 
-    generate_vestings_data(db)
+    parser.add_argument(
+        '--output-directory',
+        dest='output_dir',
+        default='data/allocations',
+        help='output directory',
+        required=True
+    )
 
-    export_data(db, 4, True)
+    parser.add_argument(
+        '--db-file',
+        dest='db_file',
+        action='store_const',
+        const='allocations.db',
+        required=False,
+        help='path to a database file'
+    )
+
+    parser.add_argument(
+        '--clear-db',
+        dest='clear_db',
+        action='store_const',
+        const=True,
+        default=False,
+        help='clear database',
+        required=False
+    )
+
+    parser.add_argument(
+        '--process-vestings',
+        dest='process_vestings',
+        action='store_const',
+        const=True,
+        default=False,
+        help='process vestings',
+        required=False
+    )
+
+    parser.add_argument(
+        '--generate-proofs',
+        dest='process_vestings',
+        action='store_const',
+        const=True,
+        default=False,
+        help='generate proofs',
+        required=False
+    )
+
+    parser.add_argument(
+        '--export',
+        type=Export.argparse,
+        choices=list(Export),
+        dest='export',
+        default=Export.none,
+        help='export type (default none)',
+        required=False
+    )
+
+    args = parser.parse_args()
+
+    if args.clear_db:
+        if os.path.exists(args.db_file):
+            os.remove(args.db_file)
+        prepare_db(args.db_file)
+
+    if not os.path.exists(args.db_file):
+        prepare_db(args.db_file)
+
+    db = next(get_db(args.db_file))
+
+    if args.process_vestings:
+        process_vestings(db, args.chain_id)
+
+    if args.generate_proofs:
+        generate_proofs(db, args.chain_id)
+
+    if args.export != "none":
+        export_data(db, args.chain_id, args.output_directory, args.export)

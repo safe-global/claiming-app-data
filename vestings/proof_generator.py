@@ -3,13 +3,13 @@ from database import VestingModel, ProofModel
 import merkle_proof
 
 
-def generate_and_add_proof(db: orm.Session, type):
+def generate_and_add_proof(db: orm.Session, type, chain_id):
 
     print(80 * "-")
     print(f"Generating {type} vestings proofs")
     print(80 * "-")
 
-    vestings = db.query(VestingModel).filter(VestingModel.type == type)
+    vestings = db.query(VestingModel).filter(VestingModel.type == type and VestingModel.chain_id == chain_id)
     vesting_ids = list(map(lambda vesting: vesting.vesting_id, vestings))
 
     i = 0
