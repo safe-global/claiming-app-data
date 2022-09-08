@@ -13,18 +13,3 @@ CREATE TABLE IF NOT EXISTS guardians (
     reason TEXT,
     contribution TEXT
 );
-
-CREATE TABLE IF NOT EXISTS vestings (
-    chain_id INTEGER NOT NULL,
-    contract TEXT NOT NULL,
-    vesting_id TEXT NOT NULL,
-    account TEXT NOT NULL,
-    duration_weeks INTEGER NOT NULL,
-    start_date INTEGER,
-    amount TEXT,
-    curve INTEGER DEFAULT 0,
-    proof TEXT,
-    CONSTRAINT con_vestings_pk PRIMARY KEY (chain_id, contract, vesting_id)
-);
-
-CREATE INDEX idx_vestings_owner ON vestings(account);

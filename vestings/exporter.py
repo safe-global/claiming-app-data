@@ -121,11 +121,11 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type="snapsh
     print(f"Exporting vestings")
     print(80 * "-")
 
-    if os.path.exists("../resources/data/allocations"):
-        shutil.rmtree("../resources/data/allocations")
+    if os.path.exists("../data/allocations"):
+        shutil.rmtree("../data/allocations")
 
-    if not os.path.exists("../resources/data/allocations"):
-        os.makedirs(f"../resources/data/allocations/{chain_id}")
+    if not os.path.exists("../data/allocations"):
+        os.makedirs(f"../data/allocations/{chain_id}")
 
     vestings = list(
         map(
@@ -162,7 +162,7 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type="snapsh
         i = j
 
     if export_type == "snapshot":
-        with open(f"../resources/data/snapshot-allocations-test.json", "w") as file:
+        with open(f"{output_directory}/snapshot-allocations-data.json", "w") as file:
             file.write(json.dumps(result, indent=4, cls=VestingEncoder))
 
 
@@ -202,7 +202,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--output-directory',
         dest='output_dir',
-        default='data/allocations',
+        default='../data/allocations',
         help='output directory',
         required=True
     )

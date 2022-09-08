@@ -11,9 +11,9 @@ def parse_vestings_csv(db: orm.Session, type, chain_id):
     vesting_file: str
 
     if type == "user":
-        vesting_file = 'assets/user_airdrop.csv'
+        vesting_file = 'assets/4/user_airdrop.csv'
     else:
-        vesting_file = 'assets/ecosystem_airdrop.csv'
+        vesting_file = 'assets/4/ecosystem_airdrop.csv'
 
     with open(vesting_file, mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
