@@ -1,0 +1,20 @@
+[
+    {
+        "tag": "ecosystem",
+        "account": "0xda2242a6DbDa924bf7D7DB8aC9482d4763EB211C",
+        "chainId": 4,
+        "contract": "0x82F1267759e9Bea202a46f8FC04704b6A5E2Af77",
+        "vestingId": "0x1619f834103defe0e065c1337d6f4201b352fc006c7d8664dcee0c00bd0bc28b",
+        "durationWeeks": 416,
+        "startDate": 1531562400,
+        "amount": "23023120000000000000000",
+        "curve": 0,
+        "proof": [
+            "0x334c9d01a22f6bf47f7413ced7715e856746c2d218aa67b98e454462627e329c",
+            "0xa204d71bc9bd93b9676347d48dcf2b2b0cffe878be3cbadfe5d38848e37b6c14",
+            "0x58716e34faf76965d05d786b9e85f94be09c5c7f703f9f42b4c4529229c40ee8",
+            "0xd34260245fceb9a1483c3fad34a2060743eb732d14386f04266f0b28b6d1befa",
+            "0xa5a5a175bec6f721a354057fe4ad3d410a05b99c011e00fc5214ee93a9a7c2dd"
+        ]
+    }
+]
