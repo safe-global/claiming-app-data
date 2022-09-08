@@ -43,4 +43,4 @@ jobs:
       # Script to deploy to the prod environment
       - name: 'Deploy to S3: Prod'
         if: github.ref == 'refs/heads/main'
-        run: aws s3 sync resources/data s3://${{ secrets.PROD_BUCKET_NAME }}/resources --delete
+        run: aws s3 sync resources/data s3://${{ env.PROD_BUCKET_NAME }}/resources --delete
