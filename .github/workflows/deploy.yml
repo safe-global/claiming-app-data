@@ -28,6 +28,13 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
+      - name: Remove broken apt repos [Ubuntu]
+        if: ${{ matrix.os }} == 'ubuntu-latest'
+        run: |
+          for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
+
+      - uses: actions/checkout@v2
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -38,9 +45,9 @@ jobs:
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
         if: github.ref == 'refs/heads/dev'
-        run: aws s3 sync resources/data s3://${{ env.STAGING_BUCKET_NAME }}/current/resources --delete
+        run: aws s3 sync resources/data/allocations s3://${{ env.STAGING_BUCKET_NAME }}/current/allocations --delete
 
       # Script to deploy to the prod environment
       - name: 'Deploy to S3: Prod'
         if: github.ref == 'refs/heads/main'
-        run: aws s3 sync resources/data s3://${{ env.PROD_BUCKET_NAME }}/resources --delete
+        run: aws s3 sync resources/data/allocations s3://${{ env.PROD_BUCKET_NAME }}/allocations --delete
