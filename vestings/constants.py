@@ -1,5 +1,4 @@
 from hexbytes import HexBytes
-from web3 import Web3
 
 
 USER_AIRDROP_ADDRESS = HexBytes("0x6C6ea0B60873255bb670F838b03db9d9a8f045c4")

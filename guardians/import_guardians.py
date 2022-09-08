@@ -1,14 +1,14 @@
 # import_guardians.py
-# Loads a guardains.csv from resources/guardians.csv
+# Loads a guardains.csv from assets/guardians.csv
 # Resolves ENS names to addresses
 # Downloads images, converts them to PNGs and resizes to 128x128, 256x256, 384x384 pixels
-# Exports guardians data to resources/data/guardians.json
-# Exports guardian images to resources/data/images/<address>_<1|2|3>x.png
+# Exports guardians data to data/guardians/guardians.json
+# Exports guardian images to data/guardians/images/<address>_<1|2|3>x.png
 #
 # You must set the INFURA_PROJECT_ID environment variable with the correct Infura project ID.
 # Otherwise, the ENS resolution won't work and script will fail.
 #
-# You must create a "claiming.sqlite" database with schema from "create_db.sql"
+# You must create a "guardians.sqlite" database with schema from "create_db.sql"
 
 import csv
 import io
@@ -51,11 +51,11 @@ import json
 # 8 - network id
 # 9 - tags
 def import_guardians():
-    con = sqlite3.connect('claiming.sqlite')
+    con = sqlite3.connect('intermediates/guardians.sqlite')
     cur = con.cursor()
 
     # import data from csv
-    with open('guardians/assets/guardians.csv', newline='') as csvfile:
+    with open('assets/guardians.csv', newline='') as csvfile:
         guardian_reader = csv.reader(csvfile)
         # skip header row
         next(guardian_reader)
@@ -83,7 +83,7 @@ def resolve_ens_names():
     address_re = re.compile('(0x[a-fA-F0-9]{40})')
     ens_re = re.compile(r"(\S+\.\S+)")
 
-    con = sqlite3.connect('claiming.sqlite')
+    con = sqlite3.connect('intermediates/guardians.sqlite')
     cur_select = con.cursor()
     cur_update = con.cursor()
     for row in cur_select.execute("SELECT id, address_or_ens FROM guardians ORDER BY id"):
@@ -108,7 +108,7 @@ def resolve_ens_names():
 
 
 def download_images():
-    con = sqlite3.connect('claiming.sqlite')
+    con = sqlite3.connect('intermediates/guardians.sqlite')
     cur_select = con.cursor()
     cur_update = con.cursor()
     for row in cur_select.execute("SELECT id, image_url FROM guardians ORDER BY id"):
@@ -124,11 +124,11 @@ def download_images():
     con.close()
 
 def substitute_images():
-    con = sqlite3.connect('claiming.sqlite')
+    con = sqlite3.connect('intermediates/guardians.sqlite')
     cur_select = con.cursor()
     cur_update = con.cursor()
 
-    directory = os.fsencode('guardians/assets/images')
+    directory = os.fsencode('assets/images')
     for file in os.listdir(directory):
         filename = os.fsdecode(file)
         guardian_name = os.path.splitext(filename)[0]
@@ -162,7 +162,7 @@ def pil_to_png(pil, size):
     return out.getvalue()
 
 def convert_images():
-    con = sqlite3.connect('claiming.sqlite')
+    con = sqlite3.connect('intermediates/guardians.sqlite')
     cur_select = con.cursor()
     cur_update = con.cursor()
 
@@ -197,7 +197,7 @@ def convert_images():
     con.close()
 
 def export_guardians_json():
-    con = sqlite3.connect('claiming.sqlite')
+    con = sqlite3.connect('intermediates/guardians.sqlite')
     cur_select = con.cursor()
     guardians = []
     for row in cur_select.execute("SELECT name, address, ens, reason, contribution FROM guardians ORDER BY name"):
@@ -213,18 +213,18 @@ def export_guardians_json():
         guardians.append(guardian)
     con.close()
 
-    with open('data/guardians/guardians.json', 'w', encoding='utf-8') as out_file:
+    with open('../data/guardians/guardians.json', 'w', encoding='utf-8') as out_file:
         json.dump(guardians, out_file, ensure_ascii=False, indent=4)
 
 def export_guardian_images():
-    con = sqlite3.connect('claiming.sqlite')
+    con = sqlite3.connect('intermediates/guardians.sqlite')
     cur_select = con.cursor()
     for row in cur_select.execute("SELECT address, image_1x, image_2x, image_3x FROM guardians WHERE image_3x IS NOT NULL ORDER BY address"):
         address, image1, image2, image3 = row
         print(address)
-        with open(f"data/guardians/images/{address}_1x.png", 'wb') as f1, open(
-                f"data/guardians/images/{address}_2x.png", 'wb') as f2, open(
-            f"data/guardians/images/{address}_3x.png", 'wb') as f3:
+        with open(f"../data/guardians/images/{address}_1x.png", 'wb') as f1, open(
+                f"../data/guardians/images/{address}_2x.png", 'wb') as f2, open(
+            f"../data/guardians/images/{address}_3x.png", 'wb') as f3:
             f1.write(image1)
             f2.write(image2)
             f3.write(image3)
