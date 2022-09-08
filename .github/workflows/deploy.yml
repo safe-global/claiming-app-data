@@ -9,6 +9,9 @@ on:
     branches:
       - main
       - dev
+  # Launches build when release is published
+  release:
+    types: [ published ]
 
 env:
   REPO_NAME_ALPHANUMERIC: claiming-app-data
