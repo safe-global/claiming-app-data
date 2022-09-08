@@ -213,7 +213,7 @@ def export_guardians_json():
         guardians.append(guardian)
     con.close()
 
-    with open('resources/data/guardians.json', 'w', encoding='utf-8') as out_file:
+    with open('resources/data/guardians/guardians.json', 'w', encoding='utf-8') as out_file:
         json.dump(guardians, out_file, ensure_ascii=False, indent=4)
 
 def export_guardian_images():
@@ -222,7 +222,9 @@ def export_guardian_images():
     for row in cur_select.execute("SELECT address, image_1x, image_2x, image_3x FROM guardians WHERE image_3x IS NOT NULL ORDER BY address"):
         address, image1, image2, image3 = row
         print(address)
-        with open(f"resources/data/images/{address}_1x.png", 'wb') as f1, open(f"resources/data/images/{address}_2x.png", 'wb') as f2, open(f"resources/data/images/{address}_3x.png", 'wb') as f3:
+        with open(f"resources/data/guardians/images/{address}_1x.png", 'wb') as f1, open(
+                f"resources/data/guardians/images/{address}_2x.png", 'wb') as f2, open(
+                f"resources/data/guardians/images/{address}_3x.png", 'wb') as f3:
             f1.write(image1)
             f2.write(image2)
             f3.write(image3)
