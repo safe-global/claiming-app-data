@@ -5,8 +5,6 @@ import sqlalchemy.ext.declarative as declarative
 import sqlalchemy.orm as orm
 
 
-DB_URL = "sqlite:///./vestings.db"
-
 Base = declarative.declarative_base()
 
 
@@ -36,15 +34,16 @@ class ProofModel(Base):
     vesting = orm.relationship("VestingModel",  back_populates="proofs", viewonly=True)
 
 
-engine = sqlalchemy.create_engine(DB_URL, connect_args={"check_same_thread": False})
-LocalSession = orm.sessionmaker(autocommit=False, autoflush=False, bind=engine)
+def create_db(db_file):
+    DB_URL = f"sqlite:///{db_file}"
+    engine = sqlalchemy.create_engine(DB_URL, connect_args={"check_same_thread": False})
+    Base.metadata.create_all(bind=engine)
 
 
-def create_db():
-    return Base.metadata.create_all(bind=engine)
-
-
-def get_db():
+def get_db(db_file):
+    DB_URL = f"sqlite:///{db_file}"
+    engine = sqlalchemy.create_engine(DB_URL, connect_args={"check_same_thread": False})
+    LocalSession = orm.sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = LocalSession()
     try:
         yield db
