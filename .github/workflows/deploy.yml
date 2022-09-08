@@ -47,14 +47,14 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           aws s3 sync resources/data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/allocations --cache-control max-age=0,no-cache,no-store,must-revalidate
-          aws s3 sync resources/data/images/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/guardians/images --cache-control max-age=0,no-cache,no-store,must-revalidate
-          aws s3 sync resources/data/guardians.json s3://${{ secrets.STAGING_BUCKET_NAME }}/current/guardians/guardians.json --cache-control max-age=0,no-cache,no-store,must-revalidate
+          aws s3 sync resources/data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/guardians --cache-control max-age=0,no-cache,no-store,must-revalidate
 
       # Script to package release files
       - name: 'Package release version'
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
           aws s3 sync resources/data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }}/allocations --cache-control max-age=0,no-cache,no-store,must-revalidate
+          aws s3 sync resources/data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }}/guardians --cache-control max-age=0,no-cache,no-store,must-revalidate
 
       # Script to prepare production deployments
       - name: 'Prepare production deployment flow'
