@@ -17,7 +17,7 @@ def prepare_db(db_file):
     print(f"Creating database")
     print(80 * "-")
     create_db(db_file)
-    
+
 
 def process_vestings(db: orm.Session, chain_id):
     parse_vestings_csv(db, "user", chain_id)
