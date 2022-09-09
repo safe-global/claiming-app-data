@@ -25,6 +25,27 @@ python vestings/exporter.py -h
 
 Exporter will place generated files under `{output_directory}/{chain_id}`
 
+### Allocation file structure
+
+```
+[
+    {
+        "tag": "[user | ecosystem]",
+        "account": "checksummed address",
+        "chainId": chain id,
+        "contract": "checksummed airdrop contract addres",
+        "vestingId": "vesting hash",
+        "durationWeeks": 416,
+        "startDate": 1531562400,
+        "amount": "amount in wei",
+        "curve": 0,
+        "proof": [
+        ]
+    },
+    ...
+ ]
+```
+
 ### Deploying to staging
 
 1. Add generated files from data/ folder to repository and commit them.
