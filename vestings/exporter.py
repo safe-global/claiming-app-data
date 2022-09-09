@@ -20,8 +20,10 @@ def prepare_db(db_file):
 
 
 def process_vestings(db: orm.Session, chain_id):
-    parse_vestings_csv(db, "user", chain_id)
-    parse_vestings_csv(db, "ecosystem", chain_id)
+    if os.path.exists(f"assets/{chain_id}/user_airdrop.csv"):
+        parse_vestings_csv(db, "user", chain_id)
+    if os.path.exists(f"assets/{chain_id}/ecosystem_airdrop.csv"):
+        parse_vestings_csv(db, "ecosystem", chain_id)
 
 
 def generate_proofs(db: orm.Session, chain_id):
@@ -121,11 +123,11 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type="snapsh
     print(f"Exporting vestings")
     print(80 * "-")
 
-    if os.path.exists("../data/allocations"):
-        shutil.rmtree("../data/allocations")
+    if os.path.exists(f"{output_directory}/{chain_id}"):
+        shutil.rmtree(f"{output_directory}/{chain_id}")
 
-    if not os.path.exists("../data/allocations"):
-        os.makedirs(f"../data/allocations/{chain_id}")
+    if not os.path.exists(f"{output_directory}/{chain_id}"):
+        os.makedirs(f"{output_directory}/{chain_id}")
 
     vestings = list(
         map(
@@ -157,12 +159,12 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type="snapsh
         if export_type == "snapshot":
             result.append(vesting_array)
         else:
-            with open(f"{output_directory}/{vesting.account}.json", "w") as file:
+            with open(f"{output_directory}/{chain_id}/{vesting.account}.json", "w") as file:
                 file.write(json.dumps(vesting_array, indent=4, cls=VestingEncoder))
         i = j
 
     if export_type == "snapshot":
-        with open(f"{output_directory}/snapshot-allocations-data.json", "w") as file:
+        with open(f"{output_directory}/{chain_id}/snapshot-allocations-data.json", "w") as file:
             file.write(json.dumps(result, indent=4, cls=VestingEncoder))
 
 
@@ -196,7 +198,8 @@ if __name__ == '__main__':
     parser.add_argument(
         '--chain-id',
         dest='chain_id',
-        help='chain id'
+        help='chain id',
+        required=True
     )
 
     parser.add_argument(
@@ -210,8 +213,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--db-file',
         dest='db_file',
-        action='store_const',
-        const='allocations.db',
+        default='intermediates/allocations.db',
         required=False,
         help='path to a database file'
     )
@@ -238,7 +240,7 @@ if __name__ == '__main__':
 
     parser.add_argument(
         '--generate-proofs',
-        dest='process_vestings',
+        dest='generate_proofs',
         action='store_const',
         const=True,
         default=False,
@@ -251,7 +253,7 @@ if __name__ == '__main__':
         type=Export.argparse,
         choices=list(Export),
         dest='export',
-        default=Export.none,
+        default='none',
         help='export type (default none)',
         required=False
     )
@@ -263,16 +265,17 @@ if __name__ == '__main__':
             os.remove(args.db_file)
         prepare_db(args.db_file)
 
+    print(args.db_file)
     if not os.path.exists(args.db_file):
         prepare_db(args.db_file)
 
     db = next(get_db(args.db_file))
 
     if args.process_vestings:
-        process_vestings(db, args.chain_id)
+        process_vestings(db, int(args.chain_id))
 
     if args.generate_proofs:
-        generate_proofs(db, args.chain_id)
+        generate_proofs(db, int(args.chain_id))
 
     if args.export != "none":
-        export_data(db, args.chain_id, args.output_directory, args.export)
+        export_data(db, int(args.chain_id), args.output_directory, args.export)
