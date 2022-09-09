@@ -11,7 +11,9 @@ Guardian data converter and image loader. Images are scaled and converted to PNG
 Place vesting csv files for a network under `vestings/assets/{chain_id}`. 
 Naming should be `user_airdrop.csv` for user airdrop and `ecosystem_airdrop.csv` for ecosystem airdrop.
 
-Now exporter script can be used to parse vesting data, generate proofs, and export data to different formats: either one file for snapshot allocation data or multiple files that contain vesting data for an address. Thea aforementioned steps can be performed at once or separately.
+Now exporter script can be used to parse vesting csv files, generate proofs, and export data to different formats: either one file for snapshot allocation data or multiple files that contain vesting data for an address. Thea aforementioned steps can be performed at once or separately.
+
+Example:
 ```
 python vestings/exporter.py --chain_id 1 --output-directory ../data/allocations --generate-vestings --generate-proofs --export allocations
 ```
@@ -33,7 +35,7 @@ Exporter will place generated files under `{output_directory}/{chain_id}`
 
 1. Draft a release and tag it with vx.y.z version tag. 
 2. Deployment action will be triggered for release.
-3. Ask devops to deploy it to production
+3. Ask devops to deploy data to production.
 
 
 
