@@ -2,6 +2,17 @@
 Vesting data converter and proofs generator.
 Guardian data converter and image loader. Images are scaled and converted to PNG.
 
+## Guardians
+
+Place csv with guardian data under `guardians/assets/guardians.csv`.
+Not all guardian images could be cropped to square dimensions without distorting the image. We have created square image versions for guardians that do not have square images and placed them under
+`guardians/assets/images`. This image collection should be extended if another guardian with not square image is added. These images will be taken for a guardian during conversion instead of initially provided image.
+
+Naming convention for image files under `guardians/assets/images`:
+```
+<guardian name>.png
+```
+
 
 
 ## Vesting Data
