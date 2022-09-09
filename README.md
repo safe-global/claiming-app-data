@@ -13,6 +13,27 @@ Naming convention for image files under `guardians/assets/images`:
 <guardian name>.png
 ```
 
+### Generating
+TBD
+
+Generated data will be placed under `../data/guardians`
+
+Guardians list: `../data/guardians/guardians.json`
+
+Guardian images: `../data/guardians/images/`
+
+### Deploying to staging
+
+1. Add generated files from data/ folder to repository and commit them.
+2. Open PR for merging them to main branch.
+3. After PR is merged deployment action will upload files to staging thus making them available.
+
+### Deploying to production
+
+1. Draft a release and tag it with vx.y.z version tag. 
+2. Deployment action will be triggered for release.
+3. Ask devops to deploy data to production.
+
 
 
 ## Vesting Data
@@ -92,8 +113,3 @@ Contains all defined allocation. Proofs are not included.
 1. Draft a release and tag it with vx.y.z version tag. 
 2. Deployment action will be triggered for release.
 3. Ask devops to deploy data to production.
-
-
-
-
-
