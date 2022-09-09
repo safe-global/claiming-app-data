@@ -27,7 +27,7 @@ Exporter will place generated files under `{output_directory}/{chain_id}`
 
 ### Allocation file structure
 
-#### Vesting file
+#### Vesting file (`--export allocations`)
 Contains all defined allocations for a specific address with proofs.
 ```
 [
@@ -48,7 +48,7 @@ Contains all defined allocations for a specific address with proofs.
  ]
 ```
 
-#### Snapshot file
+#### Snapshot file (`--export snapshot`)
 Contains all defined allocation. Proofs are not included.
 ```
 [
