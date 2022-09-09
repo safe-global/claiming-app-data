@@ -27,6 +27,8 @@ Exporter will place generated files under `{output_directory}/{chain_id}`
 
 ### Allocation file structure
 
+#### Vesting file
+Contains all defined allocations for a specific address with proofs.
 ```
 [
     {
@@ -35,15 +37,37 @@ Exporter will place generated files under `{output_directory}/{chain_id}`
         "chainId": chain id,
         "contract": "checksummed airdrop contract addres",
         "vestingId": "vesting hash",
-        "durationWeeks": 416,
-        "startDate": 1531562400,
+        "durationWeeks": integer,
+        "startDate": timestamp,
         "amount": "amount in wei",
-        "curve": 0,
+        "curve": integer,
         "proof": [
         ]
     },
     ...
  ]
+```
+
+#### Snapshot file
+Contains all defined allocation. Proofs are not included.
+```
+[
+    [
+        {
+            "tag": "[user | ecosystem]",
+            "account": "checksummed address",
+            "chainId": chain id,
+            "contract": "checksummed airdrop contract addres",
+            "vestingId": "vesting hash",
+            "durationWeeks": integer,
+            "startDate": timestamp,
+            "amount": "amount in wei",
+            "curve": integer 
+        },
+        ...
+    ],
+    ...
+]
 ```
 
 ### Deploying to staging
