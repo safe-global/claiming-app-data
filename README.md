@@ -43,7 +43,7 @@ Guardian images: `../data/guardians/images/`
 Place vesting csv files for a network under `vestings/assets/{chain_id}`. 
 Naming should be `user_airdrop.csv` for user airdrop and `ecosystem_airdrop.csv` for ecosystem airdrop.
 
-Now exporter script can be used to parse vesting csv files, generate proofs, and export data to different formats: either one file for snapshot allocation data or multiple files that contain vesting data for an address. Thea aforementioned steps can be performed at once or separately.
+Now exporter script can be used to parse vesting csv files, generate proofs, and export data to different formats: either one file for snapshot allocation data or multiple files that contain vesting data for an address. The aforementioned steps can be performed at once or separately.
 
 Example:
 ```
