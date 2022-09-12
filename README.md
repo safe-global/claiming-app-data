@@ -4,7 +4,19 @@ Guardian data converter and image loader. Images are scaled and converted to PNG
 
 ## Guardians
 
-Place csv with guardian data under `guardians/assets/guardians.csv`.
+### Guardians csv
+Guardians csv file contains following fields
+
+ - Guardian name 
+ - Description of reasons for becoming a delegate
+ - Description of former contributions
+ - Guardian address or ENS name
+ - Image url
+ - Start Date (UTC)
+ - Submit Date (UTC)
+ - Network ID
+ - Tags
+
 Not all guardian images could be cropped to square dimensions without distorting the image. We have created square image versions for guardians that do not have square images and placed them under
 `guardians/assets/images`. This image collection should be extended if another guardian with not square image is added. These images will be taken for a guardian during conversion instead of initially provided image.
 
@@ -14,7 +26,10 @@ Naming convention for image files under `guardians/assets/images`:
 ```
 
 ### Generating
+Place csv with guardian data under `guardians/assets/guardians.csv`.
+
 TBD
+
 
 Generated data will be placed under `../data/guardians`
 
@@ -37,6 +52,15 @@ Guardian images: `../data/guardians/images/`
 
 
 ## Vesting Data
+
+### Vesting csv
+Vesting csv file contains following fields
+
+ - Owner address
+ - Vesting duration in weeks
+ - Vesting start date (ISO 8601 Format)
+ - Vesting amount in wei
+
 
 ### Generating
 
