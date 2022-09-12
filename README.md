@@ -178,3 +178,7 @@ Snapshot allocations
 ```
 https://safe-claiming-app-data.gnosis-safe.io/allocations/{chain_id}/snapshot-allocations-data.json
 ```
+
+
+## Contribute
+You can contribute to this repo by creating a Pull Request or an issue. Please follow the default template set for the Pull Requests.
