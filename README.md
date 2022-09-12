@@ -43,12 +43,31 @@ Guardian images: `../data/guardians/images/`
 2. Open PR for merging them to main branch.
 3. After PR is merged deployment action will upload files to staging thus making them available.
 
+### Staging endpoints
+
+List of guardians
+```
+https://safe-claiming-app-data.staging.gnosisdev.com/guardians/guardians.json
+```
+Guardian images
+```
+https://safe-claiming-app-data.staging.gnosisdev.com/guardians/images/\(address_checksummed)_\(scale=1|2|3)x.png
+```
+
 ### Deploying to production
 
 1. Draft a release and tag it with vx.y.z version tag. 
 2. Deployment action will be triggered for release.
 3. Ask devops to deploy data to production.
 
+### Production endpoints
+```
+https://safe-claiming-app-data.gnosis-safe.io/guardians/guardians.json
+```
+Guardian images
+```
+https://safe-claiming-app-data.gnosis-safe.io/guardians/images/\(address_checksummed)_\(scale=1|2|3)x.png
+```
 
 
 ## Vesting Data
@@ -132,8 +151,30 @@ Contains all defined allocation. Proofs are not included.
 2. Open PR for merging them to main branch.
 3. After PR is merged deployment action will upload files to staging thus making them available.
 
+### Staging endpoints
+
+Allocation
+```
+https://safe-claiming-app-data.staging.gnosisdev.com/allocations/{chain_id}/{address}.json
+```
+Snapshot allocations
+```
+https://safe-claiming-app-data.staging.gnosisdev.com/allocations/{chain_id}/snapshot-allocations-data.json
+```
+
 ### Deploying to production
 
 1. Draft a release and tag it with vx.y.z version tag. 
 2. Deployment action will be triggered for release.
 3. Ask devops to deploy data to production.
+
+### Production endpoints
+
+Allocation
+```
+https://safe-claiming-app-data.gnosis-safe.io/allocations/{chain_id}/{address}.json
+```
+Snapshot allocations
+```
+https://safe-claiming-app-data.gnosis-safe.io/allocations/{chain_id}/snapshot-allocations-data.json
+```
