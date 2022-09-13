@@ -24,12 +24,23 @@ def parse_vestings_csv(db: orm.Session, type, chain_id):
                 line_count += 1
 
             owner = Web3.toChecksumAddress(row["owner"])
-            duration_weeks = row["duration"]
-            start_date = int(datetime.datetime.strptime(row["startDate"], "%Y-%m-%dT%H:%M:%S%z").timestamp())
+            #duration_weeks = row["duration"]
+            duration_weeks = 416
+
+            start_date: int
+            if "startDate" in row.keys():
+                start_date = int(datetime.datetime.strptime(row["startDate"], "%Y-%m-%dT%H:%M:%S%z").timestamp())
+            else:
+                start_date = int(datetime.datetime.strptime("2018-09-27T10:00:00+00:00", "%Y-%m-%dT%H:%M:%S%z").timestamp())
+
             amount = row["amount"]
             curve_type = 0
 
             vesting = Vesting(None, type, owner, curve_type, duration_weeks, start_date, amount, None)
+
+            USER_AIRDROP_ADDRESS = MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS
+            ECOSYSTEM_AIRDROP_ADDRESS = MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
+
             vesting_id = vesting.calculateHash(USER_AIRDROP_ADDRESS, chain_id) if type == "user" \
                 else vesting.calculateHash(ECOSYSTEM_AIRDROP_ADDRESS, chain_id)
 
