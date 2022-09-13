@@ -1,6 +1,6 @@
 # claiming-app-data
 Vesting data converter and proofs generator.
-Guardian data converter and image loader. Images are scaled and converted to PNG.
+Guardian data converter, address resolver, and image loader. Images are scaled and converted to PNG.
 
 ## Guardians
 
