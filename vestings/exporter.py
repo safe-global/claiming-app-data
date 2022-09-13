@@ -7,7 +7,7 @@ from json import JSONEncoder
 from database import get_db, create_db, VestingModel, ProofModel
 import sqlalchemy.orm as orm
 from csv_parser import parse_vestings_csv
-from proof_generator import generate_and_add_proof
+from proof_generator import generate_and_add_proof, generate_and_print_root
 from constants import *
 from web3 import Web3
 
@@ -29,6 +29,11 @@ def process_vestings(db: orm.Session, chain_id):
 def generate_proofs(db: orm.Session, chain_id):
     generate_and_add_proof(db, "user", chain_id)
     generate_and_add_proof(db, "ecosystem", chain_id)
+
+
+def generate_roots(db: orm.Session, chain_id):
+    generate_and_print_root(db, "user", chain_id)
+    generate_and_print_root(db, "ecosystem", chain_id)
 
 
 def export_data(db: orm.Session, chain_id, output_directory, export_type="snapshot"):
@@ -92,6 +97,10 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type="snapsh
         return HexBytes(proof.proof).hex()
 
     def map_vesting(model):
+
+        USER_AIRDROP_ADDRESS = MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS
+        ECOSYSTEM_AIRDROP_ADDRESS = MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
+
         vesting_data = VestingData(
             account=Web3.toChecksumAddress(model.owner),
             chainId=chain_id,
@@ -102,9 +111,14 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type="snapsh
             amount=model.amount,
             curve=model.curve_type
         )
+
         return vesting_data
 
     def map_vesting_with_proof(model):
+
+        USER_AIRDROP_ADDRESS = MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS
+        ECOSYSTEM_AIRDROP_ADDRESS = MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
+
         vesting_data = VestingDataWithProof(
             tag=model.type,
             account=model.owner,
@@ -117,6 +131,7 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type="snapsh
             curve=model.curve_type,
             proof=list(map(map_proof, model.proofs))
         )
+
         return vesting_data
 
     print(80 * "-")
@@ -207,7 +222,7 @@ if __name__ == '__main__':
         dest='output_dir',
         default='../data/allocations',
         help='output directory',
-        required=True
+        required=False
     )
 
     parser.add_argument(
@@ -249,6 +264,16 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
+        '--generate-root',
+        dest='generate_root',
+        action='store_const',
+        const=True,
+        default=False,
+        help='generate root',
+        required=False
+    )
+
+    parser.add_argument(
         '--export',
         type=Export.argparse,
         choices=list(Export),
@@ -274,8 +299,10 @@ if __name__ == '__main__':
     if args.process_vestings:
         process_vestings(db, int(args.chain_id))
 
-    if args.generate_proofs:
-        generate_proofs(db, int(args.chain_id))
-
-    if args.export != "none":
-        export_data(db, int(args.chain_id), args.output_directory, args.export)
+    if args.generate_root:
+        generate_roots(db, int(args.chain_id))
+    else:
+        if args.generate_proofs:
+            generate_proofs(db, int(args.chain_id))
+        if args.export != "none":
+            export_data(db, int(args.chain_id), args.output_directory, args.export)

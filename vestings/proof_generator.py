@@ -34,3 +34,16 @@ def generate_and_add_proof(db: orm.Session, type, chain_id):
 
         i = i + 1
         print(f"{i}: {proof}")
+
+
+def generate_and_print_root(db: orm.Session, type, chain_id):
+
+    print(80 * "-")
+    print(f"Generating {type} vestings root")
+    print(80 * "-")
+
+    vestings = db.query(VestingModel).filter(VestingModel.type == type and VestingModel.chain_id == chain_id)
+    vesting_ids = list(map(lambda vesting: vesting.vesting_id, vestings))
+
+    root = merkle_proof.generate_root(vesting_ids)
+    print(f"{type} root: {root}")

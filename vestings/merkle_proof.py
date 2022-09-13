@@ -49,3 +49,8 @@ def generate(input, element=None):
         count = math.ceil(count / 2)
 
     return proof, elements[0]
+
+
+def generate_root(input):
+    proof, root = generate(input)
+    return root
