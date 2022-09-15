@@ -3,6 +3,21 @@ Vesting data converter and proofs generator.
 
 Guardian data converter, address resolver, and image loader. Images are scaled and converted to PNG.
 
+## Setup
+Create python virtual environment
+```
+mkdir venv
+python -m venv env
+```
+Activate a virtual environment
+```
+source env/bin/activate
+```
+Install dependencies
+```
+pip install -r requirements.txt
+```
+
 ## Guardians
 
 ### Guardians csv
