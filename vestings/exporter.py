@@ -7,7 +7,7 @@ from json import JSONEncoder
 from database import get_db, create_db, VestingModel, ProofModel
 import sqlalchemy.orm as orm
 from csv_parser import parse_vestings_csv
-from proof_generator import generate_and_add_proof, generate_and_print_root
+from proof_generator import generate_and_save_proofs, generate_and_print_root
 from constants import *
 from web3 import Web3
 
@@ -26,9 +26,9 @@ def process_vestings(db: orm.Session, chain_id):
         parse_vestings_csv(db, "ecosystem", chain_id)
 
 
-def generate_proofs(db: orm.Session, chain_id):
-    generate_and_add_proof(db, "user", chain_id)
-    generate_and_add_proof(db, "ecosystem", chain_id)
+def generate_proofs(db_file, chain_id):
+    generate_and_save_proofs(db_file, "user", chain_id)
+    generate_and_save_proofs(db_file, "ecosystem", chain_id)
 
 
 def generate_roots(db: orm.Session, chain_id):
@@ -303,6 +303,6 @@ if __name__ == '__main__':
         generate_roots(db, int(args.chain_id))
     else:
         if args.generate_proofs:
-            generate_proofs(db, int(args.chain_id))
+            generate_proofs(args.db_file, int(args.chain_id))
         if args.export != "none":
             export_data(db, int(args.chain_id), args.output_directory, args.export)

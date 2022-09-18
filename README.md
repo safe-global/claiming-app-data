@@ -6,7 +6,7 @@ Guardian data converter, address resolver, and image loader. Images are scaled a
 ## Setup
 Create python virtual environment
 ```
-mkdir venv
+mkdir env
 python -m venv env
 ```
 Activate a virtual environment
