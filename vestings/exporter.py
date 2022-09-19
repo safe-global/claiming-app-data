@@ -146,7 +146,7 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type="snapsh
 
     vestings = list(
         map(
-            map_vesting_with_proof if export_type == "snapshot" else map_vesting,
+            map_vesting_with_proof if export_type == "allocations" else map_vesting,
             db.query(VestingModel)
             .where(VestingModel.chain_id == chain_id)
             .order_by(VestingModel.owner)
