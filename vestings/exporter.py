@@ -36,7 +36,7 @@ def generate_roots(db: orm.Session, chain_id):
     generate_and_print_root(db, "ecosystem", chain_id)
 
 
-def export_data(db: orm.Session, chain_id, output_directory, export_type="snapshot"):
+def export_data(db: orm.Session, chain_id, output_directory, export_type=Export.snapshot):
     class VestingData:
         def __init__(
                 self,
@@ -146,7 +146,7 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type="snapsh
 
     vestings = list(
         map(
-            map_vesting_with_proof if export_type == "allocations" else map_vesting,
+            map_vesting_with_proof if export_type == Export.allocations else map_vesting,
             db.query(VestingModel)
             .where(VestingModel.chain_id == chain_id)
             .order_by(VestingModel.owner)
@@ -171,14 +171,14 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type="snapsh
             vesting_array.append(vestings[j])
             j = j + 1
 
-        if export_type == "snapshot":
+        if export_type == Export.snapshot:
             result.append(vesting_array)
         else:
             with open(f"{output_directory}/{chain_id}/{vesting.account}.json", "w") as file:
                 file.write(json.dumps(vesting_array, indent=4, cls=VestingEncoder))
         i = j
 
-    if export_type == "snapshot":
+    if export_type == Export.snapshot:
         with open(f"{output_directory}/{chain_id}/snapshot-allocations-data.json", "w") as file:
             file.write(json.dumps(result, indent=4, cls=VestingEncoder))
 
