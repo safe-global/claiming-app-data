@@ -3,9 +3,9 @@ sqlalchemy==1.4.40
 # working with solidity & smart contracts:
 hexbytes==0.3.0
 web3==5.30.0
-eth-abi==3.0.1
-eth-utils==2.0.0
-eth-typing==3.1.0
+#eth-abi==3.0.1
+#eth-utils==2.0.0
+#eth-typing==3.1.0
 # converting SVGs
 svglib==1.4.1
 # converting PNGs
