@@ -34,6 +34,29 @@ def generate_proofs(db_file, chain_id):
 def generate_roots(db: orm.Session, chain_id):
     generate_and_print_root(db, "user", chain_id)
     generate_and_print_root(db, "ecosystem", chain_id)
+    
+
+class Export(Enum):
+    none = 'none'
+    snapshot = 'snapshot'
+    allocations = 'allocations'
+
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def from_string(s):
+        try:
+            return Export[s]
+        except KeyError:
+            raise ValueError()
+
+    @staticmethod
+    def argparse(s):
+        try:
+            return Export[s.lower()]
+        except KeyError:
+            return s
 
 
 def export_data(db: orm.Session, chain_id, output_directory, export_type=Export.snapshot):
@@ -181,29 +204,6 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type=Export.
     if export_type == Export.snapshot:
         with open(f"{output_directory}/{chain_id}/snapshot-allocations-data.json", "w") as file:
             file.write(json.dumps(result, indent=4, cls=VestingEncoder))
-
-
-class Export(Enum):
-    none = 'none'
-    snapshot = 'snapshot'
-    allocations = 'allocations'
-
-    def __str__(self):
-        return self.name
-
-    @staticmethod
-    def from_string(s):
-        try:
-            return Export[s]
-        except KeyError:
-            raise ValueError()
-
-    @staticmethod
-    def argparse(s):
-        try:
-            return Export[s.lower()]
-        except KeyError:
-            return s
 
 
 if __name__ == '__main__':
