@@ -201,7 +201,7 @@ class Export(Enum):
     @staticmethod
     def argparse(s):
         try:
-            return Export[s.upper()]
+            return Export[s.lower()]
         except KeyError:
             return s
 
@@ -305,4 +305,4 @@ if __name__ == '__main__':
         if args.generate_proofs:
             generate_proofs(args.db_file, int(args.chain_id))
         if args.export != "none":
-            export_data(db, int(args.chain_id), args.output_directory, args.export)
+            export_data(db, int(args.chain_id), args.output_dir, args.export)
