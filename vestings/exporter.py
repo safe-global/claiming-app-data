@@ -278,7 +278,7 @@ if __name__ == '__main__':
         type=Export.argparse,
         choices=list(Export),
         dest='export',
-        default='none',
+        default=Export.none,
         help='export type (default none)',
         required=False
     )
@@ -304,5 +304,5 @@ if __name__ == '__main__':
     else:
         if args.generate_proofs:
             generate_proofs(args.db_file, int(args.chain_id))
-        if args.export != "none":
+        if args.export != Export.none:
             export_data(db, int(args.chain_id), args.output_dir, args.export)

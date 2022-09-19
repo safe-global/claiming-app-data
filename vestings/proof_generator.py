@@ -36,7 +36,7 @@ def generate_and_save_proofs(db_file, type, chain_id):
     vesting_ids = list(map(lambda vesting: vesting.vesting_id, vestings))
     vestings_tree = merkle_proof.generate_vestings_tree(vesting_ids)
 
-    Parallel(n_jobs=-1)((delayed(generate_and_safe_proof_for_vesting)(db_file, vestings_tree, vesting_id) for vesting_id in vesting_ids))
+    Parallel(n_jobs=1)((delayed(generate_and_safe_proof_for_vesting)(db_file, vestings_tree, vesting_id) for vesting_id in vesting_ids))
 
 
 def generate_and_print_root(db: orm.Session, type, chain_id):
