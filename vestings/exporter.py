@@ -16,6 +16,10 @@ def prepare_db(db_file):
     print(80 * "-")
     print(f"Creating database")
     print(80 * "-")
+
+    if not os.path.exists(os.path.dirname(db_file)):
+        os.makedirs(os.path.dirname(db_file))
+
     create_db(db_file)
 
 
@@ -290,7 +294,6 @@ if __name__ == '__main__':
             os.remove(args.db_file)
         prepare_db(args.db_file)
 
-    print(args.db_file)
     if not os.path.exists(args.db_file):
         prepare_db(args.db_file)
 
