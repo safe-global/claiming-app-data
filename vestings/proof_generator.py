@@ -11,16 +11,18 @@ def generate_and_safe_proof_for_vesting(db_file, vestings_tree, vesting_id):
 
     proof = merkle_proof.extract_proof(vestings_tree, vesting_id)
     proof_index = 0
+
+    proof_models = []
     for part in proof:
         proof_model = ProofModel(
             vesting_id=vesting_id,
             proof_index=proof_index,
             proof=part
         )
-        db.add(proof_model)
-        db.commit()
-        db.refresh(proof_model)
+        proof_models.append(proof_model)
         proof_index += 1
+    db.bulk_save_objects(proof_models)
+    db.commit()
 
     print(f"{proof}")
 
