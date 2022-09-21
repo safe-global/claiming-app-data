@@ -19,6 +19,8 @@ def parse_vestings_csv(db: orm.Session, type, chain_id):
         print(f"Processing {type} vestings")
         print(80 * "-")
 
+        vesting_models = []
+
         for row in csv_reader:
             if line_count == 0:
                 line_count += 1
@@ -55,13 +57,14 @@ def parse_vestings_csv(db: orm.Session, type, chain_id):
                 amount=amount
             )
 
-            db.add(vesting_model)
-            db.commit()
-            db.refresh(vesting_model)
+            vesting_models.append(vesting_model)
 
             print(f"[{type}] {owner}: {vesting_id}")
 
             line_count += 1
+
+        db.bulk_save_objects(vesting_models)
+        db.commit()
 
         print(f'Processed {line_count} {type} vestings.')
 

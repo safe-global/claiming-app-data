@@ -56,8 +56,8 @@ jobs:
       - name: 'Package release version'
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          aws s3 sync data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }}/allocations --cache-control max-age=0,no-cache,no-store,must-revalidate
-          aws s3 sync data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }}/guardians --cache-control max-age=0,no-cache,no-store,must-revalidate
+          aws s3 sync data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }}/allocations --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
+          aws s3 sync data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }}/guardians --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
 
       # Script to prepare production deployments
       - name: 'Prepare production deployment flow'
