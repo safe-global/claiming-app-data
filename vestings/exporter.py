@@ -297,8 +297,8 @@ if __name__ == '__main__':
     if not os.path.exists(args.db_file):
         prepare_db(args.db_file)
 
-    if not os.path.exists(args.output_dir):
-        os.makedirs(args.output_dir)
+    if not os.path.exists(os.path.dirname(args.output_dir)):
+        os.makedirs(os.path.dirname(args.output_dir))
 
     db = next(get_db(args.db_file))
 
@@ -311,4 +311,4 @@ if __name__ == '__main__':
         if args.generate_proofs:
             generate_proofs(args.db_file, int(args.chain_id))
         if args.export != Export.none:
-            export_data(db, int(args.chain_id), args.output_dir, args.export)
+            export_data(db, int(args.chain_id), os.path.dirname(args.output_dir), args.export)
