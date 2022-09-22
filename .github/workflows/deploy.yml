@@ -54,19 +54,19 @@ jobs:
           pip install -r requirements.txt
 
       - name: 'Process guardian data'
-        if: github.ref == 'refs/heads/feature/guardian_images'
+        if: github.ref == 'refs/heads/main'
         run: |
           cd guardians
           python import_guardians.py
           cd ..
 
-#      - name: 'Process vesting data'
-#        if: github.ref == 'refs/heads/feature/guardian_images'
-#        run: |
-#          cd vestings
-#          python exporter.py --clear-db --chain-id 4 --process-vestings --generate-proofs --export allocations
-#          python exporter.py --chain-id 4 --export snapshot
-#          cd ..
+      - name: 'Process vesting data'
+        if: github.ref == 'refs/heads/feature/guardian_images'
+        run: |
+          cd vestings
+          python exporter.py --clear-db --chain-id 4 --process-vestings --generate-proofs --export allocations
+          python exporter.py --chain-id 4 --export snapshot
+          cd ..
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -75,14 +75,12 @@ jobs:
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-#          aws s3 sync data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/allocations --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
-
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
-        if: github.ref == 'refs/heads/feature/guardian_images'
-        #if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: |
           aws s3 sync data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/guardians --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
+          aws s3 sync data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/allocations --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
 
       # Script to package release files
       - name: 'Package release version'
