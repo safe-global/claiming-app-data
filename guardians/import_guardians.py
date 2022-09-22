@@ -261,8 +261,8 @@ def export_guardian_images():
 
 if __name__ == '__main__':
 
-    if not os.path.exists(os.path.dirname("../data/guardians/images")):
-        os.makedirs("../data/guardians/images")
+    if not os.path.exists(os.path.dirname("../data/guardians/images/")):
+        os.makedirs("../data/guardians/images/")
 
     clean_guardians()
     import_guardians()
