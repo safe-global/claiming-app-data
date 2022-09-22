@@ -224,7 +224,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--output-directory',
         dest='output_dir',
-        default='../data/allocations',
+        default='../data/allocations/',
         help='output directory',
         required=False
     )
@@ -296,6 +296,9 @@ if __name__ == '__main__':
 
     if not os.path.exists(args.db_file):
         prepare_db(args.db_file)
+
+    if not os.path.exists(args.output_dir):
+        os.makedirs(args.output_dir)
 
     db = next(get_db(args.db_file))
 
