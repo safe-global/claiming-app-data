@@ -165,8 +165,12 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type=Export.
     print(f"Exporting vestings")
     print(80 * "-")
 
-    if os.path.exists(f"{output_directory}/{chain_id}"):
-        shutil.rmtree(f"{output_directory}/{chain_id}")
+    if export_type == Export.snapshot:
+        if os.path.exists(f"{output_directory}/{chain_id}/snapshot-allocations-data.json"):
+            os.remove(f"{output_directory}/{chain_id}/snapshot-allocations-data.json")
+    else:
+        if os.path.exists(f"{output_directory}/{chain_id}"):
+            shutil.rmtree(f"{output_directory}/{chain_id}")
 
     if not os.path.exists(f"{output_directory}/{chain_id}"):
         os.makedirs(f"{output_directory}/{chain_id}")
