@@ -61,7 +61,7 @@ jobs:
           cd ..
 
       - name: 'Process vesting data'
-        if: github.ref == 'refs/heads/feature/guardian_images'
+        if: github.ref == 'refs/heads/main'
         run: |
           cd vestings
           python exporter.py --clear-db --chain-id 4 --process-vestings --generate-proofs --export allocations
