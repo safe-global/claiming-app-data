@@ -193,9 +193,10 @@ def svg_to_pil(svgbytes, id):
     #     #image.read(blob=buf, format="svg")
     #
     #     with image.convert('png') as converted:
-    #         pil = renderPM.drawToPIL()
-    #         converted.save(filename=f"data/guardians/images/{id}.png")
-    #
+    #         return Image.open(io.BytesIO(converted.tobytes()), formats=["PNG"])
+
+            #converted.save(filename=f"data/guardians/images/{id}.png")
+
     #     # png_image = image.make_blob("png")
     #     # with open(f"data/guardians/images/{id}.png", "wb") as out:
     #     #     out.write(png_image)
@@ -290,10 +291,10 @@ def export_guardian_images():
 
 if __name__ == '__main__':
     clean_guardians()
-    # import_guardians()
-    # resolve_ens_names()
-    # download_images()
-    # substitute_images()
-    # convert_images()
-    # export_guardians_json()
-    # export_guardian_images()
+    import_guardians()
+    resolve_ens_names()
+    download_images()
+    substitute_images()
+    convert_images()
+    export_guardians_json()
+    export_guardian_images()
