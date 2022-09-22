@@ -51,10 +51,12 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-#      - name: 'Process guardian data'
-#        if: github.ref == 'refs/heads/feature/guardian_images'
-#        run: |
-#          python
+      - name: 'Process guardian data'
+        if: github.ref == 'refs/heads/feature/guardian_images'
+        run: |
+          cd guardians
+          python import_guardians.py
+          cd ..
 
       - name: 'Process vesting data'
         if: github.ref == 'refs/heads/feature/guardian_images'

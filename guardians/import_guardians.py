@@ -41,9 +41,9 @@ from wand.display import display as WandDisplay
 
 import json
 
-DB_FILE = 'guardians/intermediates/guardians.sqlite'
-CSV_FILE = 'guardians/assets/guardians.csv'
-IMAGE_DIR = 'guardians/assets/images'
+DB_FILE = 'intermediates/guardians.sqlite'
+CSV_FILE = 'assets/guardians.csv'
+IMAGE_DIR = 'assets/images'
 
 def clean_guardians():
     con = sqlite3.connect(DB_FILE)
@@ -175,10 +175,10 @@ import wand.image
 def svg_to_pil(svgbytes, id):
     buf = io.BytesIO(svgbytes)
 
-    from svglib.svglib import svg2rlg
-    from reportlab.graphics import renderPM
-    drawing = svg2rlg(buf)
-    renderPM.drawToFile(drawing, f"data/guardians/images/{id}.png", fmt="PNG")
+    #from svglib.svglib import svg2rlg
+    #from reportlab.graphics import renderPM
+    #drawing = svg2rlg(buf)
+    #renderPM.drawToFile(drawing, f"data/guardians/images/{id}.png", fmt="PNG")
 
     #png_image = cairosvg.svg2png(buf)
 
@@ -193,18 +193,19 @@ def svg_to_pil(svgbytes, id):
     #     #image.read(blob=buf, format="svg")
     #
     #     with image.convert('png') as converted:
+    #         pil = renderPM.drawToPIL()
     #         converted.save(filename=f"data/guardians/images/{id}.png")
-
-        # png_image = image.make_blob("png")
-        # with open(f"data/guardians/images/{id}.png", "wb") as out:
-        #     out.write(png_image)
-
-
+    #
+    #     # png_image = image.make_blob("png")
+    #     # with open(f"data/guardians/images/{id}.png", "wb") as out:
+    #     #     out.write(png_image)
 
 
-    # rlg = svg2rlg(buf)
-    # pil = renderPM.drawToPIL(rlg)
-    # return pil
+
+
+    rlg = svg2rlg(buf)
+    pil = renderPM.drawToPIL(rlg)
+    return pil
 
 def png_to_pil(pngbytes):
     return Image.open(io.BytesIO(pngbytes), formats=["PNG"])
@@ -288,11 +289,11 @@ def export_guardian_images():
     con.close()
 
 if __name__ == '__main__':
-    # clean_guardians()
+    clean_guardians()
     # import_guardians()
     # resolve_ens_names()
     # download_images()
     # substitute_images()
-    convert_images()
-    #export_guardians_json()
-    export_guardian_images()
+    # convert_images()
+    # export_guardians_json()
+    # export_guardian_images()
