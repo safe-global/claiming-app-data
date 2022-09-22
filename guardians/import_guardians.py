@@ -167,7 +167,7 @@ def svg_to_pil(svgbytes):
 
     buf = io.BytesIO(svgbytes)
 
-    with wand.image.Image(blob=buf, format="svg", background=wand.color.Color('transparent')) as image:
+    with wand.image.Image(blob=buf, format="svg") as image:
 
         with image.convert('png') as converted:
             pil = Image.open(io.BytesIO(converted.make_blob()))
