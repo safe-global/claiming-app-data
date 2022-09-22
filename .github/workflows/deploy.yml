@@ -50,7 +50,8 @@ jobs:
 
       - name: Configure python environment
         run: |
-          sudo apt-get install -y imagemagick
+          sudo apt-get install -y libmagickwand-dev imagemagick
+          sudo apt-get update
           pip install -r requirements.txt
 
       - name: 'Process guardian data'
