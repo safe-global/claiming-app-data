@@ -252,9 +252,7 @@ def export_guardian_images():
     for row in cur_select.execute("SELECT address, image_1x, image_2x, image_3x FROM guardians WHERE image_3x IS NOT NULL ORDER BY address"):
         address, image1, image2, image3 = row
         print(address)
-        with open(f"../data/guardians/images/{address}_1x.png", 'wb') as f1, open(
-                f"../data/guardians/images/{address}_2x.png", 'wb') as f2, open(
-                f"../data/guardians/images/{address}_3x.png", 'wb') as f3:
+        with open(f"../data/guardians/images/{address}_1x.png", 'wb') as f1, open(f"../data/guardians/images/{address}_2x.png", 'wb') as f2, open(f"../data/guardians/images/{address}_3x.png", 'wb') as f3:
             f1.write(image1)
             f2.write(image2)
             f3.write(image3)
@@ -265,7 +263,7 @@ if __name__ == '__main__':
 
     if not os.path.exists(os.path.dirname("../data/guardians/images")):
         os.makedirs("../data/guardians/images")
-    
+
     clean_guardians()
     import_guardians()
     resolve_ens_names()
