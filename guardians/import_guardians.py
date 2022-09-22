@@ -158,9 +158,9 @@ def substitute_images():
 
 
 
-from wand.api import library
-import wand.color
-import wand.image
+# from wand.api import library
+# import wand.color
+# import wand.image
 
 # with wand.image.Image() as image:
 #     with wand.color.Color('transparent') as background_color:
