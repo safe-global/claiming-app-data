@@ -55,6 +55,7 @@ jobs:
       - name: 'Process guardian data'
         if: github.ref == 'refs/heads/feature/guardian_images'
         run: |
+          mkdir -p data/guardians/images
           cd guardians
           python import_guardians.py
           cd ..
