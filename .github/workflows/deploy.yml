@@ -51,7 +51,7 @@ jobs:
       - name: Configure python environment
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y imagemagick
+          sudo apt install -y graphicsmagick-imagemagick-compat
           pip install -r requirements.txt
 
       - name: 'Process guardian data'
