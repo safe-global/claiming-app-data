@@ -297,8 +297,8 @@ if __name__ == '__main__':
     if not os.path.exists(args.db_file):
         prepare_db(args.db_file)
 
-    if not os.path.exists(os.path.dirname(args.output_dir)):
-        os.makedirs(os.path.dirname(args.output_dir))
+    if not os.path.exists(f"{os.path.dirname(args.output_dir)}/{int(args.chain_id)}"):
+        os.makedirs(f"{os.path.dirname(args.output_dir)}/{int(args.chain_id)}")
 
     db = next(get_db(args.db_file))
 
