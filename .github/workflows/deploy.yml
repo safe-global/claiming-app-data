@@ -50,9 +50,9 @@ jobs:
 
       - name: Configure python environment
         run: |
+          sudo apt-get install -y librsvg2-bin
           sudo apt-get install -y libmagickwand-dev imagemagick
           sudo apt-get update
-          sudo ldconfig /usr/local/lib
           pip install -r requirements.txt
 
       - name: 'Process guardian data'
