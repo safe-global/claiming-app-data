@@ -51,7 +51,7 @@ jobs:
       - name: Configure python environment
         run: |
           pip install -r requirements.txt
-          sudo apt-get install -y libmagickwand-dev
+          sudo apt-get install -y python-wand
 
       - name: 'Process guardian data'
         if: github.ref == 'refs/heads/feature/guardian_images'
