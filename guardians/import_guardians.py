@@ -36,8 +36,8 @@ from reportlab.graphics import renderPM
 from PIL import Image
 from PIL.Image import Resampling
 
-from wand.image import Image as WandImage
-from wand.display import display as WandDisplay
+# from wand.image import Image as WandImage
+# from wand.display import display as WandDisplay
 
 import json
 
