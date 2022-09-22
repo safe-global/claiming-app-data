@@ -21,6 +21,7 @@ env:
   REPO_NAME_ALPHANUMERIC: claiming-app-data
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_BUCKET_NAME }}
   PROD_BUCKET_NAME: ${{ secrets.PROD_BUCKET_NAME }}
+  INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
 
 jobs:
 
