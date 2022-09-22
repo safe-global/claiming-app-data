@@ -65,7 +65,6 @@ jobs:
         run: |
           cd vestings
           python exporter.py --clear-db --chain-id 4 --process-vestings --generate-proofs --export allocations
-          python exporter.py --chain-id 4 --export snapshot
           cd ..
 
       - name: Configure AWS credentials
