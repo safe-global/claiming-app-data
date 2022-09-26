@@ -1,4 +1,4 @@
-name: Deploy All
+name: Deploy Release
 
 on:
   # Launches build when release is published
@@ -52,8 +52,8 @@ jobs:
         if: github.ref == startsWith(github.ref, 'refs/tags/v')
         run: |
           cd vestings
-          python exporter.py --clear-db --chain-id 4 --process-vestings --generate-proofs --export allocations
-          python exporter.py --chain-id 4 --export snapshot
+          python exporter.py --clear-db --chain-id 1 --process-vestings --generate-proofs --export allocations
+          python exporter.py --chain-id 1 --export snapshot
           cd ..
 
       - name: Configure AWS credentials
@@ -62,13 +62,6 @@ jobs:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      # Script to deploy to staging environment
-      - name: 'Deploy to S3: Staging'
-        if: github.ref == startsWith(github.ref, 'refs/tags/v')
-        run: |
-          aws s3 sync data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/guardians --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
-          aws s3 sync data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/allocations --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
 
       # Script to package release files
       - name: 'Package release version'
