@@ -6,7 +6,7 @@ on:
     branches:
       - main
     inputs:
-      name:
+      chain_id:
         type: choice
         description: chain id
         options:
