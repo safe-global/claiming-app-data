@@ -1,17 +1,6 @@
 name: Deploy
 
-# Run on pushes to main or PRs
 on:
-  # Launches when manually triggered with the new workflow_dispatch event
-  workflow_dispatch:
-  # Launches for pushes to main or dev
-  push:
-    branches:
-      - main
-#    paths:
-#      - guardians/assets/*
-#      - vestings/assets/*
-
   # Launches build when release is published
   release:
     types: [ published ]
@@ -53,14 +42,14 @@ jobs:
           pip install -r requirements.txt
 
       - name: 'Process guardian data'
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+        if: github.ref == startsWith(github.ref, 'refs/tags/v')
         run: |
           cd guardians
           python import_guardians.py
           cd ..
 
       - name: 'Process vesting data'
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+        if: github.ref == startsWith(github.ref, 'refs/tags/v')
         run: |
           cd vestings
           python exporter.py --clear-db --chain-id 4 --process-vestings --generate-proofs --export allocations
@@ -76,7 +65,7 @@ jobs:
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == startsWith(github.ref, 'refs/tags/v')
         run: |
           aws s3 sync data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/guardians --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
           aws s3 sync data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/allocations --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
