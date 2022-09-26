@@ -68,4 +68,4 @@ jobs:
       - name: 'Deploy to S3: Staging'
         if: github.ref == 'refs/heads/main'
         run: |
-          aws s3 sync data/allocations/${{ github.event.inputs.chain_id }} s3://${{ secrets.STAGING_BUCKET_NAME }}/current/allocation/${{ github.event.inputs.chain_id }} --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
+          aws s3 sync data/allocations/${{ github.event.inputs.chain_id }} s3://${{ secrets.STAGING_BUCKET_NAME }}/current/allocations/${{ github.event.inputs.chain_id }} --delete --cache-control max-age=0,no-cache,no-store,must-revalidate

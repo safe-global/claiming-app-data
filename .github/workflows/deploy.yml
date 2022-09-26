@@ -1,4 +1,4 @@
-name: Deploy Release
+name: Deploy All (Release)
 
 on:
   # Launches build when release is published
