@@ -3,6 +3,46 @@ Vesting data converter and proofs generator.
 
 Guardian data converter, address resolver, and image loader. All images are scaled and converted to PNG.
 
+
+# Endpoints
+
+## Staging endpoints
+
+List of guardians
+```
+https://safe-claiming-app-data.staging.gnosisdev.com/guardians/guardians.json
+```
+Guardian images
+```
+https://safe-claiming-app-data.staging.gnosisdev.com/guardians/images/\(address_checksummed)_\(scale=1|2|3)x.png
+```
+Allocation
+```
+https://safe-claiming-app-data.staging.gnosisdev.com/allocations/{chain_id}/{address}.json
+```
+Snapshot allocations
+```
+https://safe-claiming-app-data.staging.gnosisdev.com/allocations/{chain_id}/snapshot-allocations-data.json
+```
+
+## Production endpoints
+```
+https://safe-claiming-app-data.gnosis-safe.io/guardians/guardians.json
+```
+Guardian images
+```
+https://safe-claiming-app-data.gnosis-safe.io/guardians/images/\(address_checksummed)_\(scale=1|2|3)x.png
+```
+Allocation
+```
+https://safe-claiming-app-data.gnosis-safe.io/allocations/{chain_id}/{address}.json
+```
+Snapshot allocations
+```
+https://safe-claiming-app-data.gnosis-safe.io/allocations/{chain_id}/snapshot-allocations-data.json
+```
+
+
 # Deployments
 
 
@@ -130,44 +170,6 @@ Contains all defined allocation. Proofs are not included.
     ],
     ...
 ]
-```
-
-# Endpoints
-
-## Staging endpoints
-
-List of guardians
-```
-https://safe-claiming-app-data.staging.gnosisdev.com/guardians/guardians.json
-```
-Guardian images
-```
-https://safe-claiming-app-data.staging.gnosisdev.com/guardians/images/\(address_checksummed)_\(scale=1|2|3)x.png
-```
-Allocation
-```
-https://safe-claiming-app-data.staging.gnosisdev.com/allocations/{chain_id}/{address}.json
-```
-Snapshot allocations
-```
-https://safe-claiming-app-data.staging.gnosisdev.com/allocations/{chain_id}/snapshot-allocations-data.json
-```
-
-## Production endpoints
-```
-https://safe-claiming-app-data.gnosis-safe.io/guardians/guardians.json
-```
-Guardian images
-```
-https://safe-claiming-app-data.gnosis-safe.io/guardians/images/\(address_checksummed)_\(scale=1|2|3)x.png
-```
-Allocation
-```
-https://safe-claiming-app-data.gnosis-safe.io/allocations/{chain_id}/{address}.json
-```
-Snapshot allocations
-```
-https://safe-claiming-app-data.gnosis-safe.io/allocations/{chain_id}/snapshot-allocations-data.json
 ```
 
 
