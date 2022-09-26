@@ -1,20 +1,11 @@
-name: Deploy
+name: Deploy Guardians
 
 # Run on pushes to main or PRs
 on:
   # Launches when manually triggered with the new workflow_dispatch event
   workflow_dispatch:
-  # Launches for pushes to main or dev
-  push:
     branches:
       - main
-#    paths:
-#      - guardians/assets/*
-#      - vestings/assets/*
-
-  # Launches build when release is published
-  release:
-    types: [ published ]
 
 env:
   REPO_NAME_ALPHANUMERIC: claiming-app-data
@@ -53,18 +44,10 @@ jobs:
           pip install -r requirements.txt
 
       - name: 'Process guardian data'
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+        if: github.ref == 'refs/heads/main'
         run: |
           cd guardians
           python import_guardians.py
-          cd ..
-
-      - name: 'Process vesting data'
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
-        run: |
-          cd vestings
-          python exporter.py --clear-db --chain-id 4 --process-vestings --generate-proofs --export allocations
-          python exporter.py --chain-id 4 --export snapshot
           cd ..
 
       - name: Configure AWS credentials
@@ -79,20 +62,3 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           aws s3 sync data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/guardians --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
-          aws s3 sync data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/allocations --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
-
-      # Script to package release files
-      - name: 'Package release version'
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: |
-          aws s3 sync data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }}/guardians --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
-          aws s3 sync data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }}/allocations --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
-
-      # Script to prepare production deployments
-      - name: 'Prepare production deployment flow'
-        if: success() && startsWith(github.ref, 'refs/tags/v')
-        run: bash ./scripts/github/prepare_production_deployment.sh
-        env:
-          PROD_DEPLOYMENT_HOOK_TOKEN: ${{ secrets.PROD_DEPLOYMENT_HOOK_TOKEN }}
-          PROD_DEPLOYMENT_HOOK_URL: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
-          VERSION_TAG: ${{ github.event.release.tag_name }}

@@ -1,0 +1,71 @@
+name: Deploy Vestings
+
+on:
+  # Launches when manually triggered with the new workflow_dispatch event
+  workflow_dispatch:
+    branches:
+      - main
+    inputs:
+      name:
+        type: choice
+        description: chain id
+        options:
+          - 1
+          - 4
+
+env:
+  REPO_NAME_ALPHANUMERIC: claiming-app-data
+  STAGING_BUCKET_NAME: ${{ secrets.STAGING_BUCKET_NAME }}
+  PROD_BUCKET_NAME: ${{ secrets.PROD_BUCKET_NAME }}
+  INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+
+jobs:
+
+  deploy:
+    name: Deployment
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Remove broken apt repos [Ubuntu]
+        if: ${{ matrix.os }} == 'ubuntu-latest'
+        run: |
+          for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
+
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Configure python environment
+        run: |
+          sudo apt-get install --yes --quiet inkscape
+          pip install -r requirements.txt
+
+      - name: 'Process vesting data'
+        if: github.ref == 'refs/heads/main'
+        run: |
+          cd vestings
+          python exporter.py --clear-db --chain-id ${{ github.event.inputs.chain_id }} --process-vestings --generate-proofs --export allocations
+          python exporter.py --chain-id ${{ github.event.inputs.chain_id }} --export snapshot
+          cd ..
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      # Script to deploy to staging environment
+      - name: 'Deploy to S3: Staging'
+        if: github.ref == 'refs/heads/main'
+        run: |
+          aws s3 sync data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/allocations --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
