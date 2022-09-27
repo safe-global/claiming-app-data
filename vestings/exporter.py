@@ -15,7 +15,6 @@ from web3 import Web3
 def prepare_db(db_file):
     print(80 * "-")
     print(f"Creating database")
-    print(80 * "-")
 
     if not os.path.exists(os.path.dirname(db_file)):
         os.makedirs(os.path.dirname(db_file))
@@ -23,11 +22,11 @@ def prepare_db(db_file):
     create_db(db_file)
 
 
-def process_vestings(db: orm.Session, chain_id):
+def process_vestings(db: orm.Session, chain_id, verbose):
     if os.path.exists(f"assets/{chain_id}/user_airdrop.csv"):
-        parse_vestings_csv(db, "user", chain_id)
+        parse_vestings_csv(db, "user", chain_id, verbose)
     if os.path.exists(f"assets/{chain_id}/ecosystem_airdrop.csv"):
-        parse_vestings_csv(db, "ecosystem", chain_id)
+        parse_vestings_csv(db, "ecosystem", chain_id, verbose)
 
 
 def generate_proofs(db_file, chain_id):
@@ -291,6 +290,16 @@ if __name__ == '__main__':
         required=False
     )
 
+    parser.add_argument(
+        '--verbose',
+        dest='verbose',
+        action='store_const',
+        const=True,
+        default=False,
+        help='verbose',
+        required=False
+    )
+
     args = parser.parse_args()
 
     if args.clear_db:
@@ -304,7 +313,7 @@ if __name__ == '__main__':
     db = next(get_db(args.db_file))
 
     if args.process_vestings:
-        process_vestings(db, int(args.chain_id))
+        process_vestings(db, int(args.chain_id), args.verbose)
 
     if args.generate_root:
         generate_roots(db, int(args.chain_id))

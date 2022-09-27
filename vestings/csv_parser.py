@@ -7,7 +7,7 @@ from vesting import Vesting
 from web3 import Web3
 
 
-def parse_vestings_csv(db: orm.Session, type, chain_id):
+def parse_vestings_csv(db: orm.Session, type, chain_id, verbose):
 
     vesting_file = f"assets/{chain_id}/{type}_airdrop.csv"
 
@@ -59,7 +59,8 @@ def parse_vestings_csv(db: orm.Session, type, chain_id):
 
             vesting_models.append(vesting_model)
 
-            print(f"[{type}] {owner}: {vesting_id}")
+            if verbose:
+                print(f"[{type}] {owner}: {vesting_id}")
 
             line_count += 1
 
