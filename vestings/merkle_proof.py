@@ -94,5 +94,5 @@ def generate(input, element=None):
 
 
 def generate_root(input):
-    proof, root = generate(input)
-    return root
+    tree = generate_vestings_tree(input)
+    return tree[len(tree) - 1]
