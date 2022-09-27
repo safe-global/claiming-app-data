@@ -161,8 +161,9 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
         return vesting_data
 
     print(80 * "-")
-    print(f"Exporting vestings")
-    print(80 * "-")
+    print(f"Exporting vestings ({export_type})")
+    if verbose:
+        print(80 * "-")
 
     if export_type == Export.snapshot:
         if os.path.exists(f"{output_directory}/{chain_id}/snapshot-allocations-data.json"):
