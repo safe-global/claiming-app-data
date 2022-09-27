@@ -29,9 +29,9 @@ def process_vestings(db: orm.Session, chain_id, verbose):
         parse_vestings_csv(db, "ecosystem", chain_id, verbose)
 
 
-def generate_proofs(db_file, chain_id):
-    generate_and_save_proofs(db_file, "user", chain_id)
-    generate_and_save_proofs(db_file, "ecosystem", chain_id)
+def generate_proofs(db_file, chain_id, verbose):
+    generate_and_save_proofs(db_file, "user", chain_id, verbose)
+    generate_and_save_proofs(db_file, "ecosystem", chain_id, verbose)
 
 
 def generate_roots(db: orm.Session, chain_id):
@@ -62,7 +62,7 @@ class Export(Enum):
             return s
 
 
-def export_data(db: orm.Session, chain_id, output_directory, export_type=Export.snapshot):
+def export_data(db: orm.Session, chain_id, output_directory, verbose, export_type=Export.snapshot):
     class VestingData:
         def __init__(
                 self,
@@ -192,7 +192,8 @@ def export_data(db: orm.Session, chain_id, output_directory, export_type=Export.
 
         vesting = vestings[i]
 
-        print(f"Writing {vesting.account} vestings to file")
+        if verbose:
+            print(f"Writing {vesting.account} vestings to file")
 
         vesting_array.append(vesting)
 
@@ -319,6 +320,6 @@ if __name__ == '__main__':
         generate_roots(db, int(args.chain_id))
     else:
         if args.generate_proofs:
-            generate_proofs(args.db_file, int(args.chain_id))
+            generate_proofs(args.db_file, int(args.chain_id), args.verbose)
         if args.export != Export.none:
-            export_data(db, int(args.chain_id), os.path.dirname(args.output_dir), args.export)
+            export_data(db, int(args.chain_id), os.path.dirname(args.output_dir), args.verbose, args.export)
