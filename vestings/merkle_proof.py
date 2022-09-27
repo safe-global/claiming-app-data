@@ -95,4 +95,4 @@ def generate(input, element=None):
 
 def generate_root(input):
     tree = generate_vestings_tree(input)
-    return tree[len(tree) - 1]
+    return tree[len(tree) - 1][0]
