@@ -22,10 +22,14 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose):
         vesting_models = []
 
         for row in csv_reader:
-            
+
             owner = Web3.toChecksumAddress(row["owner"])
-            #duration_weeks = row["duration"]
-            duration_weeks = 416
+
+            duration_weeks: int
+            if "duration" in row.keys():
+                duration_weeks = row["duration"]
+            else:
+                duration_weeks = 416
 
             start_date: int
             if "startDate" in row.keys():
