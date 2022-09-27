@@ -117,7 +117,7 @@ def resolve_ens_names():
             address = resolve_ens(ens)
 
         if not address:
-            print(f"Guardian {id} does not have ens or address")
+            print(f"Guardian {row[0]} does not have ens or address")
             con.close()
             sys.exit(2)
 
