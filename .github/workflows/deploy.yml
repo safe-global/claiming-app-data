@@ -38,6 +38,7 @@ jobs:
 
       - name: Configure python environment
         run: |
+          sudo apt-get update
           sudo apt-get install --yes --quiet inkscape
           pip install -r requirements.txt
 
