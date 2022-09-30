@@ -71,6 +71,7 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
     class VestingData:
         def __init__(
                 self,
+                tag,
                 account,
                 chainId,
                 contract,
@@ -80,6 +81,7 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
                 amount,
                 curve
         ):
+            self.tag = tag
             self.account = account
             self.chainId = chainId
             self.contract = contract
@@ -133,6 +135,7 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
         ECOSYSTEM_AIRDROP_ADDRESS = MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
 
         vesting_data = VestingData(
+            tag=model.type,
             account=Web3.toChecksumAddress(model.owner),
             chainId=chain_id,
             contract=Web3.toChecksumAddress(ECOSYSTEM_AIRDROP_ADDRESS) if model.type == "ecosystem" else Web3.toChecksumAddress(USER_AIRDROP_ADDRESS),
