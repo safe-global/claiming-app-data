@@ -53,7 +53,7 @@ jobs:
         run: |
           cd vestings
           python exporter.py --clear-db --chain-id ${{ github.event.inputs.chain_id }} --process-vestings --generate-proofs --export allocations
-          python exporter.py --chain-id --process-investor-vestings ${{ github.event.inputs.chain_id }} --export snapshot
+          python exporter.py --chain-id ${{ github.event.inputs.chain_id }} --process-investor-vestings --export snapshot
           cd ..
 
       - name: Configure AWS credentials
