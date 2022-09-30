@@ -6,7 +6,7 @@ import json
 from json import JSONEncoder
 from database import get_db, create_db, VestingModel, ProofModel
 import sqlalchemy.orm as orm
-from csv_parser import parse_vestings_csv
+from csv_parser import parse_vestings_csv, parse_investor_vestings_csv
 from proof_generator import generate_and_save_proofs, generate_and_print_root
 from constants import *
 from web3 import Web3
@@ -27,6 +27,11 @@ def process_vestings(db: orm.Session, chain_id, verbose):
         parse_vestings_csv(db, "user", chain_id, verbose)
     if os.path.exists(f"assets/{chain_id}/ecosystem_airdrop.csv"):
         parse_vestings_csv(db, "ecosystem", chain_id, verbose)
+
+
+def process_investor_vestings(db: orm.Session, chain_id, verbose):
+    if os.path.exists(f"assets/{chain_id}/investor_vestings.csv"):
+        parse_investor_vestings_csv(db, chain_id, verbose)
 
 
 def generate_proofs(db_file, chain_id, verbose):
@@ -263,6 +268,16 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
+        '--process-investor-vestings',
+        dest='process_investor_vestings',
+        action='store_const',
+        const=True,
+        default=False,
+        help='process investor vestings',
+        required=False
+    )
+
+    parser.add_argument(
         '--generate-proofs',
         dest='generate_proofs',
         action='store_const',
@@ -316,6 +331,9 @@ if __name__ == '__main__':
 
     if args.process_vestings:
         process_vestings(db, int(args.chain_id), args.verbose)
+
+    if args.process_investor_vestings:
+        process_investor_vestings(db, int(args.chain_id), args.verbose)
 
     if args.generate_root:
         generate_roots(db, int(args.chain_id))
