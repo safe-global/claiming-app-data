@@ -101,7 +101,7 @@ def convert_vestings_csv(input_file: str, output_file: str):
 
 def parse_investor_vestings_csv(db: orm.Session, chain_id, verbose):
 
-    vesting_file = f"assets/{chain_id}/investor_vestings.csv"
+    vesting_file = f"assets/{chain_id}/investor_airdrop.csv"
 
     with open(vesting_file, mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)

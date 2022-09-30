@@ -30,7 +30,7 @@ def process_vestings(db: orm.Session, chain_id, verbose):
 
 
 def process_investor_vestings(db: orm.Session, chain_id, verbose):
-    if os.path.exists(f"assets/{chain_id}/investor_vestings.csv"):
+    if os.path.exists(f"assets/{chain_id}/investor_airdrop.csv"):
         parse_investor_vestings_csv(db, chain_id, verbose)
 
 
