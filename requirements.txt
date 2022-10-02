@@ -10,3 +10,5 @@ Pillow==9.2.0
 Wand==0.6.10
 # multiprocessing
 joblib==1.1.0
+# date and time
+python-dateutil==2.8.2
