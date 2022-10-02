@@ -4,9 +4,9 @@ import os
 import shutil
 import json
 from json import JSONEncoder
-from database import get_db, create_db, VestingModel, ProofModel
+from database import get_db, create_db, VestingModel
 import sqlalchemy.orm as orm
-from csv_parser import parse_vestings_csv, parse_investor_vestings_csv
+from csv_parser import parse_vestings_csv
 from proof_generator import generate_and_save_proofs, generate_and_print_root
 from constants import *
 from web3 import Web3
@@ -30,8 +30,8 @@ def process_vestings(db: orm.Session, chain_id, verbose):
 
 
 def process_investor_vestings(db: orm.Session, chain_id, verbose):
-    if os.path.exists(f"assets/{chain_id}/investor_airdrop.csv"):
-        parse_investor_vestings_csv(db, chain_id, verbose)
+    if os.path.exists(f"assets/{chain_id}/investor_vestings.csv"):
+        parse_vestings_csv(db, "investor", chain_id, verbose)
 
 
 def generate_proofs(db_file, chain_id, verbose):
