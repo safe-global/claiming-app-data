@@ -2,7 +2,7 @@ import sqlalchemy.orm as orm
 from database import VestingModel
 from constants import *
 import csv
-import datetime
+from dateutil.parser import parse
 from vesting import Vesting
 from web3 import Web3
 
@@ -33,12 +33,9 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose):
 
             start_date: int
             if "startDate" in row.keys():
-                if type == "investor":
-                    start_date = int(datetime.datetime.strptime(row["startDate"], "%Y-%m-%dT%H:%M:%S.%fZ").timestamp())
-                else:
-                    start_date = int(datetime.datetime.strptime(row["startDate"], "%Y-%m-%dT%H:%M:%S%z").timestamp())
+                start_date = parse(row["startDate"]).timestamp()
             else:
-                start_date = int(datetime.datetime.strptime("2018-09-27T10:00:00+00:00", "%Y-%m-%dT%H:%M:%S%z").timestamp())
+                start_date = parse("2018-09-27T10:00:00+00:00").timestamp()
 
             amount = row["amount"]
 
