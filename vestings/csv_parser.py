@@ -9,7 +9,13 @@ from web3 import Web3
 
 def parse_vestings_csv(db: orm.Session, type, chain_id, verbose):
 
-    vesting_file = f"assets/{chain_id}/{type}_vestings.csv" if type == "investor" else f"assets/{chain_id}/{type}_airdrop.csv"
+    vesting_file = {
+        "user": f"assets/{chain_id}/user_airdrop.csv",
+        "ecosystem": f"assets/{chain_id}/ecosystem_airdrop.csv",
+        "investor": f"assets/{chain_id}/investor_vestings.csv",
+    }.get(type)
+    if not vesting_file:
+        raise ValueError(f"Not a valid vestings type: {type}")
 
     with open(vesting_file, mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
