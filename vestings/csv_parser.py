@@ -41,15 +41,26 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose):
 
             curve_type = 0
 
+            calculated_vesting_id: str
+
+            vesting = Vesting(None, type, owner, curve_type, duration_weeks, start_date, amount, None)
+
+            if type == "investor":
+                calculated_vesting_id = vesting.calculateHash(MAINNET_INVESTOR_AIRDROP_ADDRESS, chain_id)
+            else:
+                user_airdrop_address = MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS
+                ecosystem_airdrop_address = MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
+                calculated_vesting_id = vesting.calculateHash(user_airdrop_address, chain_id) if type == "user" \
+                    else vesting.calculateHash(ecosystem_airdrop_address, chain_id)
+
             vesting_id: str
+
             if "vestingId" in row.keys():
                 vesting_id = row["vestingId"]
+                if vesting_id != calculated_vesting_id:
+                    raise ValueError("provided and calculated vesting id do not match!")
             else:
-                vesting = Vesting(None, type, owner, curve_type, duration_weeks, start_date, amount, None)
-                USER_AIRDROP_ADDRESS = MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS
-                ECOSYSTEM_AIRDROP_ADDRESS = MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
-                vesting_id = vesting.calculateHash(USER_AIRDROP_ADDRESS, chain_id) if type == "user" \
-                    else vesting.calculateHash(ECOSYSTEM_AIRDROP_ADDRESS, chain_id)
+                vesting_id = calculated_vesting_id
 
             vesting_model = VestingModel(
                 vesting_id=vesting_id,
