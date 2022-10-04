@@ -90,30 +90,3 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose):
         db.commit()
 
         print(f'Processed {line_count} {type} vestings.')
-
-
-def convert_vestings_csv(input_file: str, output_file: str):
-
-    with open(input_file, mode='r') as ifile:
-
-        csv_reader = csv.DictReader(ifile)
-        line_count = 0
-
-        with open(output_file, mode='w') as ofile:
-
-            for row in csv_reader:
-
-                if line_count == 0:
-                    ofile.write("owner,duration,startDate,amount\n")
-                    line_count += 1
-                else:
-                    ofile.write("\n")
-
-                owner = Web3.toChecksumAddress(row["safe_address"])
-                duration = 416
-                start_date = "2018-07-14T10:00:00+00:00"
-                amount = Web3.toWei(row["tokens"], "ether")
-
-                ofile.write(f"{owner},{duration},{start_date},{amount}")
-
-                line_count += 1
