@@ -54,9 +54,11 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose):
             if type == "investor":
                 calculated_vesting_id = vesting.calculateHash(MAINNET_INVESTOR_AIRDROP_ADDRESS, chain_id)
             else:
-                user_airdrop_address = MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS
-                ecosystem_airdrop_address = MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
-                calculated_vesting_id = vesting.calculateHash(user_airdrop_address if type == "user" else ecosystem_airdrop_address, chain_id)
+                airdrop_address = {
+                    "user": MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS,
+                    "ecosystem": MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
+                }[type]
+                calculated_vesting_id = vesting.calculateHash(airdrop_address, chain_id)
 
             vesting_id: str
 
