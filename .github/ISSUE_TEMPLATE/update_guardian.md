@@ -11,7 +11,11 @@ assignees: ''
 -[ ] staging
 -[ ] production
 
-# Current guardian data
+# Action
+- [ ] update data
+- [ ] remove guardian
+
+# Current guardian data:
 - name: [name],
 - address: [address],
 - ens: [ens],
@@ -19,7 +23,7 @@ assignees: ''
 - reason: [reason],
 - contribution: [contribution]
 
-# Updated guardian data
+# Change guardian data to (if updating):
 - name: [name],
 - address: [address],
 - ens: [ens],
@@ -28,12 +32,14 @@ assignees: ''
 - contribution: [contribution]
 
 # Acceptance Criteria
-
--[ ] Guardian has a name.
--[ ] Provided address is valid.
--[ ] If ens name is available it can be resolved to a valid address.
--[ ] Provided image can be fit into a square placeholder. Too long or too wide images are not acceptable.
--[ ] Reason for becoming a guardian is provided (not empty). 
--[ ] Previous contribution is provided (not empty).
+-[ ] Update:
+  -[ ] Guardian has a name.
+  -[ ] Provided address is valid.
+  -[ ] If ens name is available it can be resolved to a valid address.
+  -[ ] Provided image can be fit into a square placeholder. Too long or too wide images are not acceptable.
+  -[ ] Reason for becoming a guardian is provided (not empty). 
+  -[ ] Previous contribution is provided (not empty).
+-[ ] Delete:
+  -[ ] All guardian data is removed
 
 # Optional comments
