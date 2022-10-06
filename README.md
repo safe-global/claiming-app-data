@@ -10,19 +10,19 @@ Guardian data converter, address resolver, and image loader. All images are scal
 
 List of guardians
 ```
-https://safe-claiming-app-data.staging.gnosisdev.com/guardians/guardians.json
+https://safe-claiming-app-data.staging.5afe.dev/guardians/guardians.json
 ```
 Guardian images
 ```
-https://safe-claiming-app-data.staging.gnosisdev.com/guardians/images/\(address_checksummed)_\(scale=1|2|3)x.png
+https://safe-claiming-app-data.staging.5afe.dev/guardians/images/\(address_checksummed)_\(scale=1|2|3)x.png
 ```
 Allocation
 ```
-https://safe-claiming-app-data.staging.gnosisdev.com/allocations/{chain_id}/{address}.json
+https://safe-claiming-app-data.staging.5afe.dev/allocations/{chain_id}/{address}.json
 ```
 Snapshot allocations
 ```
-https://safe-claiming-app-data.staging.gnosisdev.com/allocations/{chain_id}/snapshot-allocations-data.json
+https://safe-claiming-app-data.staging.5afe.dev/allocations/{chain_id}/snapshot-allocations-data.json
 ```
 
 ## Production endpoints
