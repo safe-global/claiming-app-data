@@ -37,12 +37,14 @@ def process_investor_vestings(db: orm.Session, chain_id, verbose):
 def generate_proofs(db_file, chain_id, verbose):
     generate_and_save_proofs(db_file, "user", chain_id, verbose)
     generate_and_save_proofs(db_file, "ecosystem", chain_id, verbose)
+    generate_and_save_proofs(db_file, "investor", chain_id, verbose)
 
 
 def generate_roots(db: orm.Session, chain_id):
     generate_and_print_root(db, "user", chain_id)
     generate_and_print_root(db, "ecosystem", chain_id)
-    
+    generate_and_print_root(db, "investor", chain_id)
+
 
 class Export(Enum):
     none = 'none'
@@ -162,11 +164,20 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
         USER_AIRDROP_ADDRESS = MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS
         ECOSYSTEM_AIRDROP_ADDRESS = MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
 
+        contract: str
+
+        if model.type == "ecosystem":
+            contract = Web3.toChecksumAddress(ECOSYSTEM_AIRDROP_ADDRESS)
+        elif model.type == "user":
+            contract = Web3.toChecksumAddress(USER_AIRDROP_ADDRESS)
+        elif model.type == "investor":
+            contract = Web3.toChecksumAddress(MAINNET_INVESTOR_AIRDROP_ADDRESS)
+
         vesting_data = VestingDataWithProof(
             tag=model.type,
             account=model.owner,
             chainId=chain_id,
-            contract=Web3.toChecksumAddress(ECOSYSTEM_AIRDROP_ADDRESS) if model.type == "ecosystem" else Web3.toChecksumAddress(USER_AIRDROP_ADDRESS),
+            contract=contract,
             vestingId=model.vesting_id,
             durationWeeks=model.duration_weeks,
             startDate=model.start_date,
