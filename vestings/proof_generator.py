@@ -38,7 +38,6 @@ def generate_and_save_proofs(db_file, type, chain_id, verbose):
     db = next(get_db(db_file))
     vestings = db.query(VestingModel).filter(VestingModel.type == type and VestingModel.chain_id == chain_id)
     vesting_ids = list(map(lambda vesting: vesting.vesting_id, vestings))
-
     vestings_tree = merkle_proof.generate_vestings_tree(vesting_ids)
 
     Parallel(n_jobs=1)((delayed(generate_and_safe_proof_for_vesting)(db_file, vestings_tree, vesting_id, verbose) for vesting_id in vesting_ids))
