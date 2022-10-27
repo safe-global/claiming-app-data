@@ -37,13 +37,11 @@ def process_investor_vestings(db: orm.Session, chain_id, verbose):
 def generate_proofs(db_file, chain_id, verbose):
     generate_and_save_proofs(db_file, "user", chain_id, verbose)
     generate_and_save_proofs(db_file, "ecosystem", chain_id, verbose)
-    generate_and_save_proofs(db_file, "investor", chain_id, verbose)
 
 
 def generate_roots(db: orm.Session, chain_id):
     generate_and_print_root(db, "user", chain_id)
     generate_and_print_root(db, "ecosystem", chain_id)
-    generate_and_print_root(db, "investor", chain_id)
 
 
 class Export(Enum):
