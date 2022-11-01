@@ -7,7 +7,7 @@ from vesting import Vesting
 from web3 import Web3
 
 
-def parse_vestings_csv(db: orm.Session, type, chain_id, verbose):
+def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, duration):
 
     vesting_file = {
         "user": f"assets/{chain_id}/user_airdrop.csv",
@@ -32,22 +32,28 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose):
             owner = Web3.toChecksumAddress(row["owner"])
 
             duration_weeks: int
-            if "duration" in row.keys():
-                duration_weeks = row["duration"]
+            if duration is not None:
+                duration_weeks = duration
             else:
-                duration_weeks = 416
+                if "duration" in row.keys():
+                    duration_weeks = row["duration"]
+                else:
+                    duration_weeks = 416
 
-            start_date: int
-            if "startDate" in row.keys():
-                start_date = parse(row["startDate"]).timestamp()
+            start_date_timestamp: int
+            if start_date is not None:
+                start_date_timestamp = start_date
             else:
-                start_date = parse("2018-09-27T10:00:00+00:00").timestamp()
+                if "startDate" in row.keys():
+                    start_date_timestamp = parse(row["startDate"]).timestamp()
+                else:
+                    start_date_timestamp = parse("2018-09-27T10:00:00+00:00").timestamp()
 
             amount = row["amount"]
 
             curve_type = 0
 
-            vesting = Vesting(None, type, owner, curve_type, duration_weeks, start_date, amount, None)
+            vesting = Vesting(None, type, owner, curve_type, duration_weeks, start_date_timestamp, amount, None)
 
             airdrop_address = {
                 "user": MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS,
@@ -73,7 +79,7 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose):
                 owner=owner,
                 curve_type=curve_type,
                 duration_weeks=duration_weeks,
-                start_date=start_date,
+                start_date=start_date_timestamp,
                 amount=amount
             )
 
