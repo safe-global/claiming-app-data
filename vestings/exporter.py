@@ -131,23 +131,28 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
 
     def map_vesting(model):
 
-        USER_AIRDROP_ADDRESS = MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS
-        ECOSYSTEM_AIRDROP_ADDRESS = MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
-
-        contract: str
-
-        if model.type == "ecosystem":
-            contract = Web3.toChecksumAddress(ECOSYSTEM_AIRDROP_ADDRESS)
-        elif model.type == "user":
-            contract = Web3.toChecksumAddress(USER_AIRDROP_ADDRESS)
-        elif model.type == "investor":
-            contract = Web3.toChecksumAddress(MAINNET_INVESTOR_AIRDROP_ADDRESS)
+        contract = {
+            "user": {
+                1: MAINNET_USER_AIRDROP_ADDRESS,
+                4: RINKEBY_USER_AIRDROP_ADDRESS,
+                5: GOERLI_USER_AIRDROP_ADDRESS
+            }[chain_id],
+            "ecosystem": {
+                1: MAINNET_ECOSYSTEM_AIRDROP_ADDRESS,
+                4: RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS,
+                5: GOERLI_ECOSYSTEM_AIRDROP_ADDRESS
+            }[chain_id],
+            "investor": {
+                1: MAINNET_INVESTOR_VESTING_POOL_ADDRESS,
+                5: GOERLI_INVESTOR_VESTING_POOL_ADDRESS
+            }[chain_id]
+        }[model.type]
 
         vesting_data = VestingData(
             tag=model.type,
             account=Web3.toChecksumAddress(model.owner),
             chainId=chain_id,
-            contract=contract,
+            contract=Web3.toChecksumAddress(contract),
             vestingId=model.vesting_id,
             durationWeeks=model.duration_weeks,
             startDate=model.start_date,
@@ -159,23 +164,28 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
 
     def map_vesting_with_proof(model):
 
-        USER_AIRDROP_ADDRESS = MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS
-        ECOSYSTEM_AIRDROP_ADDRESS = MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS
-
-        contract: str
-
-        if model.type == "ecosystem":
-            contract = Web3.toChecksumAddress(ECOSYSTEM_AIRDROP_ADDRESS)
-        elif model.type == "user":
-            contract = Web3.toChecksumAddress(USER_AIRDROP_ADDRESS)
-        elif model.type == "investor":
-            contract = Web3.toChecksumAddress(MAINNET_INVESTOR_AIRDROP_ADDRESS)
+        contract = {
+            "user": {
+                1: MAINNET_USER_AIRDROP_ADDRESS,
+                4: RINKEBY_USER_AIRDROP_ADDRESS,
+                5: GOERLI_USER_AIRDROP_ADDRESS
+            }[chain_id],
+            "ecosystem": {
+                1: MAINNET_ECOSYSTEM_AIRDROP_ADDRESS,
+                4: RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS,
+                5: GOERLI_ECOSYSTEM_AIRDROP_ADDRESS
+            }[chain_id],
+            "investor": {
+                1: MAINNET_INVESTOR_VESTING_POOL_ADDRESS,
+                5: GOERLI_INVESTOR_VESTING_POOL_ADDRESS
+            }[chain_id]
+        }[model.type]
 
         vesting_data = VestingDataWithProof(
             tag=model.type,
             account=model.owner,
             chainId=chain_id,
-            contract=contract,
+            contract=Web3.toChecksumAddress(contract),
             vestingId=model.vesting_id,
             durationWeeks=model.duration_weeks,
             startDate=model.start_date,

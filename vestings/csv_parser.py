@@ -56,9 +56,20 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, dur
             vesting = Vesting(None, type, owner, curve_type, duration_weeks, start_date_timestamp, amount, None)
 
             airdrop_address = {
-                "user": MAINNET_USER_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_USER_AIRDROP_ADDRESS,
-                "ecosystem": MAINNET_ECOSYSTEM_AIRDROP_ADDRESS if chain_id == 1 else RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS,
-                "investor": MAINNET_INVESTOR_AIRDROP_ADDRESS
+                "user": {
+                    1: MAINNET_USER_AIRDROP_ADDRESS,
+                    4: RINKEBY_USER_AIRDROP_ADDRESS,
+                    5: GOERLI_USER_AIRDROP_ADDRESS
+                }[chain_id],
+                "ecosystem": {
+                    1: MAINNET_ECOSYSTEM_AIRDROP_ADDRESS,
+                    4: RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS,
+                    5: GOERLI_ECOSYSTEM_AIRDROP_ADDRESS
+                }[chain_id],
+                "investor": {
+                    1: MAINNET_INVESTOR_VESTING_POOL_ADDRESS,
+                    5: GOERLI_INVESTOR_VESTING_POOL_ADDRESS
+                }[chain_id]
             }[type]
             
             calculated_vesting_id = vesting.calculateHash(airdrop_address, chain_id)
