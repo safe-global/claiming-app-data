@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
     branches:
       - main
+      - feature/goerli_allocation_data
     inputs:
       chain_id:
         type: choice
@@ -12,6 +13,7 @@ on:
         options:
           - 1
           - 4
+          - 5
 
 env:
   REPO_NAME_ALPHANUMERIC: claiming-app-data
@@ -49,11 +51,17 @@ jobs:
           pip install -r requirements.txt
 
       - name: 'Process vesting data'
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/goerli_allocation_data'
         run: |
           cd vestings
-          python exporter.py --clear-db --chain-id ${{ github.event.inputs.chain_id }} --process-vestings --process-investor-vestings --generate-proofs --export allocations
-          python exporter.py --chain-id ${{ github.event.inputs.chain_id }} --export snapshot
+          if [[ ${{ github.event.inputs.chain_id }} == 5 ]]; then
+            python exporter.py --clear-db --chain-id ${{ github.event.inputs.chain_id }} --process-vestings --process-investor-vestings --generate-proofs --start-date 1531519200 --duration 416
+            python exporter.py --chain-id ${{ github.event.inputs.chain_id }} --process-investor-vestings --start-date 1664575200 --duration 208 --export allocations
+            python exporter.py --chain-id ${{ github.event.inputs.chain_id }} --export snapshot
+          else
+            python exporter.py --clear-db --chain-id ${{ github.event.inputs.chain_id }} --process-vestings --process-investor-vestings --generate-proofs --export allocations
+            python exporter.py --chain-id ${{ github.event.inputs.chain_id }} --export snapshot
+          fi
           cd ..
 
       - name: Configure AWS credentials
