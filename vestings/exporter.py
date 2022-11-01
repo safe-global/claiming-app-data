@@ -22,16 +22,16 @@ def prepare_db(db_file):
     create_db(db_file)
 
 
-def process_vestings(db: orm.Session, chain_id, verbose):
+def process_vestings(db: orm.Session, chain_id, verbose, start_date, duration):
     if os.path.exists(f"assets/{chain_id}/user_airdrop.csv"):
-        parse_vestings_csv(db, "user", chain_id, verbose)
+        parse_vestings_csv(db, "user", chain_id, verbose, start_date, duration)
     if os.path.exists(f"assets/{chain_id}/ecosystem_airdrop.csv"):
-        parse_vestings_csv(db, "ecosystem", chain_id, verbose)
+        parse_vestings_csv(db, "ecosystem", chain_id, verbose, start_date, duration)
 
 
-def process_investor_vestings(db: orm.Session, chain_id, verbose):
+def process_investor_vestings(db: orm.Session, chain_id, verbose, start_date, duration):
     if os.path.exists(f"assets/{chain_id}/investor_vestings.csv"):
-        parse_vestings_csv(db, "investor", chain_id, verbose)
+        parse_vestings_csv(db, "investor", chain_id, verbose, start_date, duration)
 
 
 def generate_proofs(db_file, chain_id, verbose):
@@ -279,6 +279,20 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
+        '--start-date',
+        dest='start_date',
+        help='start date timestamp',
+        required=False
+    )
+
+    parser.add_argument(
+        '--duration',
+        dest='duration',
+        help='duration in weeks',
+        required=False
+    )
+
+    parser.add_argument(
         '--process-vestings',
         dest='process_vestings',
         action='store_const',
@@ -351,10 +365,10 @@ if __name__ == '__main__':
     db = next(get_db(args.db_file))
 
     if args.process_vestings:
-        process_vestings(db, int(args.chain_id), args.verbose)
+        process_vestings(db, int(args.chain_id), args.verbose, args.start_date, args.duration)
 
     if args.process_investor_vestings:
-        process_investor_vestings(db, int(args.chain_id), args.verbose)
+        process_investor_vestings(db, int(args.chain_id), args.verbose, args.start_date, args.duration)
 
     if args.generate_root:
         generate_roots(db, int(args.chain_id))
