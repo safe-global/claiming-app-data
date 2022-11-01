@@ -73,6 +73,6 @@ jobs:
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feature/goerli_allocation_data'
         run: |
           aws s3 sync data/allocations/${{ github.event.inputs.chain_id }} s3://${{ secrets.STAGING_BUCKET_NAME }}/current/allocations/${{ github.event.inputs.chain_id }} --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
