@@ -55,8 +55,8 @@ jobs:
         run: |
           cd vestings
           if [[ ${{ github.event.inputs.chain_id }} == 5 ]]; then
-            python exporter.py --clear-db --chain-id ${{ github.event.inputs.chain_id }} --process-vestings --generate-proofs --start-date 1531519200 --duration 416
-            python exporter.py --chain-id ${{ github.event.inputs.chain_id }} --process-investor-vestings --start-date 1664575200 --duration 208 --export allocations
+            python exporter.py --clear-db --chain-id ${{ github.event.inputs.chain_id }} --process-vestings --generate-proofs --start-date 1531526400 --duration 416
+            python exporter.py --chain-id ${{ github.event.inputs.chain_id }} --process-investor-vestings --start-date 1664582400 --duration 208 --export allocations
             python exporter.py --chain-id ${{ github.event.inputs.chain_id }} --export snapshot
           else
             python exporter.py --clear-db --chain-id ${{ github.event.inputs.chain_id }} --process-vestings --process-investor-vestings --generate-proofs --export allocations
