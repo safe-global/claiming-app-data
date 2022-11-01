@@ -53,8 +53,9 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
           cd vestings
-          python exporter.py --clear-db --chain-id 4 --process-vestings --process-investor-vestings --generate-proofs --export allocations
-          python exporter.py --chain-id 4 --export snapshot
+          python exporter.py --clear-db --chain-id 5 --process-vestings --generate-proofs --start-date 1531526400 --duration 416
+          python exporter.py --chain-id 5 --process-investor-vestings --start-date 1664582400 --duration 208 --export allocations
+          python exporter.py --chain-id 5 --export snapshot
           python exporter.py --clear-db --chain-id 1 --process-vestings --process-investor-vestings --generate-proofs --export allocations
           python exporter.py --chain-id 1 --export snapshot
           cd ..
