@@ -8,8 +8,8 @@ assignees: ''
 ---
 
 # Environment
--[ ] staging
--[ ] production
+- [ ] staging
+- [ ] production
 
 # Action
 - [ ] update data
@@ -32,14 +32,14 @@ assignees: ''
 - contribution: [contribution]
 
 # Acceptance Criteria
--[ ] Update:
-  -[ ] Guardian has a name.
-  -[ ] Provided address is valid.
-  -[ ] If ens name is available it can be resolved to a valid address.
-  -[ ] Provided image can be fit into a square placeholder. Too long or too wide images are not acceptable.
-  -[ ] Reason for becoming a guardian is provided (not empty). 
-  -[ ] Previous contribution is provided (not empty).
--[ ] Delete:
-  -[ ] All guardian data is removed
+- [ ] Update:
+  - [ ] Guardian has a name.
+  - [ ] Provided address is valid.
+  - [ ] If ens name is available it can be resolved to a valid address.
+  - [ ] Provided image can be fit into a square placeholder. Too long or too wide images are not acceptable.
+  - [ ] Reason for becoming a guardian is provided (not empty). 
+  - [ ] Previous contribution is provided (not empty).
+- [ ] Delete:
+  - [ ] All guardian data is removed
 
 # Optional comments
