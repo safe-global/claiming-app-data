@@ -1,7 +1,7 @@
 ---
-name: Update guardian data
-about: Request to update guardian data
-title: "[Guardians] "
+name: Update delegate data
+about: Request to update delegate data
+title: "[Delegates] "
 labels: infrastructure
 assignees: ''
 
@@ -15,7 +15,7 @@ assignees: ''
 - [ ] update data
 - [ ] remove guardian
 
-# Current guardian data:
+# Current delegate data:
 - name: [name],
 - address: [address],
 - ens: [ens],
@@ -23,7 +23,7 @@ assignees: ''
 - reason: [reason],
 - contribution: [contribution]
 
-# Change guardian data to (if updating):
+# Change delegate data to (if updating):
 - name: [name],
 - address: [address],
 - ens: [ens],
@@ -33,13 +33,13 @@ assignees: ''
 
 # Acceptance Criteria
 - [ ] Update:
-  - [ ] Guardian has a name.
+  - [ ] Delegate has a name.
   - [ ] Provided address is valid.
   - [ ] If ens name is available it can be resolved to a valid address.
   - [ ] Provided image can be fit into a square placeholder. Too long or too wide images are not acceptable.
   - [ ] Reason for becoming a guardian is provided (not empty). 
   - [ ] Previous contribution is provided (not empty).
 - [ ] Delete:
-  - [ ] All guardian data is removed
+  - [ ] All delegate data is removed
 
 # Optional comments
