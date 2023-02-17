@@ -13,7 +13,7 @@ assignees: ''
 
 # Action
 - [ ] update data
-- [ ] remove guardian
+- [ ] remove delegate
 
 # Current delegate data:
 - name: [name],
@@ -37,7 +37,7 @@ assignees: ''
   - [ ] Provided address is valid.
   - [ ] If ens name is available it can be resolved to a valid address.
   - [ ] Provided image can be fit into a square placeholder. Too long or too wide images are not acceptable.
-  - [ ] Reason for becoming a guardian is provided (not empty). 
+  - [ ] Reason for becoming a delegate is provided (not empty). 
   - [ ] Previous contribution is provided (not empty).
 - [ ] Delete:
   - [ ] All delegate data is removed
