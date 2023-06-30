@@ -9,6 +9,7 @@ import sqlalchemy.orm as orm
 from csv_parser import parse_vestings_csv
 from proof_generator import generate_and_save_proofs, generate_and_print_root
 from constants import *
+from addresses import get_airdrop_addresses
 from web3 import Web3
 
 
@@ -23,25 +24,22 @@ def prepare_db(db_file):
 
 
 def process_vestings(db: orm.Session, chain_id, verbose, start_date, duration):
-    if os.path.exists(f"assets/{chain_id}/user_airdrop.csv"):
-        parse_vestings_csv(db, "user", chain_id, verbose, start_date, duration)
-    if os.path.exists(f"assets/{chain_id}/ecosystem_airdrop.csv"):
-        parse_vestings_csv(db, "ecosystem", chain_id, verbose, start_date, duration)
+    for tag in ("user", "user_v2", "ecosystem"):
+        parse_vestings_csv(db, tag, chain_id, verbose, start_date, duration)
 
 
 def process_investor_vestings(db: orm.Session, chain_id, verbose, start_date, duration):
-    if os.path.exists(f"assets/{chain_id}/investor_vestings.csv"):
-        parse_vestings_csv(db, "investor", chain_id, verbose, start_date, duration)
+    parse_vestings_csv(db, "investor", chain_id, verbose, start_date, duration)
 
 
 def generate_proofs(db_file, chain_id, verbose):
-    generate_and_save_proofs(db_file, "user", chain_id, verbose)
-    generate_and_save_proofs(db_file, "ecosystem", chain_id, verbose)
+    for tag in ("user", "user_v2", "ecosystem"):
+        generate_and_save_proofs(db_file, tag, chain_id, verbose)
 
 
 def generate_roots(db: orm.Session, chain_id):
-    generate_and_print_root(db, "user", chain_id)
-    generate_and_print_root(db, "ecosystem", chain_id)
+    for tag in ("user", "user_v2", "ecosystem"):
+        generate_and_print_root(db, tags, chain_id)
 
 
 class Export(Enum):
@@ -130,29 +128,13 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
         return HexBytes(proof.proof).hex()
 
     def map_vesting(model):
-
-        contract = {
-            "user": {
-                1: MAINNET_USER_AIRDROP_ADDRESS,
-                4: RINKEBY_USER_AIRDROP_ADDRESS,
-                5: GOERLI_USER_AIRDROP_ADDRESS
-            }[chain_id],
-            "ecosystem": {
-                1: MAINNET_ECOSYSTEM_AIRDROP_ADDRESS,
-                4: RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS,
-                5: GOERLI_ECOSYSTEM_AIRDROP_ADDRESS
-            }[chain_id],
-            "investor": {
-                1: MAINNET_INVESTOR_VESTING_POOL_ADDRESS,
-                5: GOERLI_INVESTOR_VESTING_POOL_ADDRESS
-            }[chain_id]
-        }[model.type]
+        contract = get_airdrop_addresses(chain_id)[model.type]
 
         vesting_data = VestingData(
             tag=model.type,
-            account=Web3.toChecksumAddress(model.owner),
+            account=Web3.to_checksum_address(model.owner),
             chainId=chain_id,
-            contract=Web3.toChecksumAddress(contract),
+            contract=Web3.to_checksum_address(contract),
             vestingId=model.vesting_id,
             durationWeeks=model.duration_weeks,
             startDate=model.start_date,
@@ -163,29 +145,13 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
         return vesting_data
 
     def map_vesting_with_proof(model):
-
-        contract = {
-            "user": {
-                1: MAINNET_USER_AIRDROP_ADDRESS,
-                4: RINKEBY_USER_AIRDROP_ADDRESS,
-                5: GOERLI_USER_AIRDROP_ADDRESS
-            }[chain_id],
-            "ecosystem": {
-                1: MAINNET_ECOSYSTEM_AIRDROP_ADDRESS,
-                4: RINKEBY_ECOSYSTEM_AIRDROP_ADDRESS,
-                5: GOERLI_ECOSYSTEM_AIRDROP_ADDRESS
-            }[chain_id],
-            "investor": {
-                1: MAINNET_INVESTOR_VESTING_POOL_ADDRESS,
-                5: GOERLI_INVESTOR_VESTING_POOL_ADDRESS
-            }[chain_id]
-        }[model.type]
+        contract = get_airdrop_addresses(chain_id)[model.type]
 
         vesting_data = VestingDataWithProof(
             tag=model.type,
             account=model.owner,
             chainId=chain_id,
-            contract=Web3.toChecksumAddress(contract),
+            contract=Web3.to_checksum_address(contract),
             vestingId=model.vesting_id,
             durationWeeks=model.duration_weeks,
             startDate=model.start_date,

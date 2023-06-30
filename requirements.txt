@@ -2,7 +2,7 @@
 sqlalchemy==1.4.40
 # working with solidity & smart contracts:
 hexbytes==0.3.0
-web3==5.30.0
+web3==6.5.0
 # converting SVGs
 svglib==1.4.1
 # converting PNGs
