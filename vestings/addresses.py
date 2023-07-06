@@ -8,9 +8,9 @@ def get_airdrop_addresses(chain_id):
             5: GOERLI_USER_AIRDROP_ADDRESS
         }[chain_id],
         "user_v2": {
-            1: MAINNET_USER_AIRDROP_ADDRESS,
-            4: RINKEBY_USER_AIRDROP_ADDRESS,
-            5: GOERLI_USER_AIRDROP_ADDRESS
+            1: MAINNET_USER_V2_AIRDROP_ADDRESS,
+            4: RINKEBY_USER_V2_AIRDROP_ADDRESS,
+            5: GOERLI_USER_V2_AIRDROP_ADDRESS
         }[chain_id],
         "ecosystem": {
             1: MAINNET_ECOSYSTEM_AIRDROP_ADDRESS,
