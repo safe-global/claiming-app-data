@@ -93,7 +93,7 @@ def import_guardians():
 def resolve_ens(ens):
     infura_project_id = os.environ.get('INFURA_PROJECT_ID')
     w3 = Web3(HTTPProvider(f"https://mainnet.infura.io/v3/{infura_project_id}"))
-    ns = ENS.fromWeb3(w3)
+    ns = ENS.from_web3(w3)
     address = ns.address(ens)
     return address
 

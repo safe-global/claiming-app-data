@@ -134,7 +134,7 @@ Contains all defined allocations for a specific address with proofs.
 ```
 [
     {
-        "tag": "[user | ecosystem]",
+        "tag": "[user | user_v2 | ecosystem]",
         "account": "checksummed address",
         "chainId": chain id,
         "contract": "checksummed airdrop contract addres",
@@ -156,7 +156,7 @@ Contains all defined allocation. Proofs are not included.
 [
     [
         {
-            "tag": "[user | ecosystem]",
+            "tag": "[user | user_v2 | ecosystem]",
             "account": "checksummed address",
             "chainId": chain id,
             "contract": "checksummed airdrop contract addres",
@@ -223,7 +223,8 @@ Now exporter script can be used to parse vesting csv files, generate proofs, and
 
 Example:
 ```
-python vestings/exporter.py --chain_id 1 --output-directory ../data/allocations --generate-vestings --generate-proofs --export allocations
+cd vestings
+python exporter.py --chain-id 1 --output-directory ../data/allocations --process-vestings --generate-proofs --export allocations
 ```
 
 If you want to see all possible parameters 

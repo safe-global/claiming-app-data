@@ -8,7 +8,7 @@ VESTING_TYPEHASH = HexBytes("0x43838b5ce9ca440d1ac21b07179a1fdd88aa2175e5ea103f6
 
 DOMAIN_SEPARATOR_TYPEHASH = HexBytes("0x47e79534a245952e8b16893a336b85a3d9ea9fa8c573f3d803afb92a79469218")
 
-EMPTY_HASH = Web3.solidityKeccak(['bytes'], [bytes(HexBytes("0x"))])
+EMPTY_HASH = Web3.solidity_keccak(['bytes'], [bytes(HexBytes("0x"))])
 
 
 class Vesting:
@@ -24,7 +24,7 @@ class Vesting:
         self.proof = proof
 
     def calculateHash(self, airdrop_address, chain_id):
-        domain_separator = Web3.solidityKeccak(
+        domain_separator = Web3.solidity_keccak(
             ['bytes'],
             [
                 abi.encode(
@@ -34,7 +34,7 @@ class Vesting:
             ]
         )
 
-        vesting_data_hash = Web3.solidityKeccak(
+        vesting_data_hash = Web3.solidity_keccak(
             ['bytes'],
             [
                 abi.encode(
@@ -45,7 +45,7 @@ class Vesting:
             ]
         )
 
-        vesting_id = Web3.solidityKeccak(
+        vesting_id = Web3.solidity_keccak(
             ['bytes'],
             [
                 encode_packed(

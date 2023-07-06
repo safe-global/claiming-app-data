@@ -4,11 +4,11 @@ from eth_abi import abi
 from web3 import Web3
 
 
-EMPTY_HASH = HexBytes(Web3.solidityKeccak(['bytes'], [bytes(HexBytes("0x"))])).hex()
+EMPTY_HASH = HexBytes(Web3.solidity_keccak(['bytes'], [bytes(HexBytes("0x"))])).hex()
 
 
 def combine_and_hash(leaf1: str, leaf2: str):
-    combined_hash = Web3.solidityKeccak(
+    combined_hash = Web3.solidity_keccak(
         ['bytes'],
         [
             abi.encode(

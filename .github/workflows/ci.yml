@@ -1,0 +1,49 @@
+name: Python CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  release:
+    types: [released]
+
+jobs:
+  linting:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: pip install pre-commit
+        # - name: Run pre-commit
+        # run: pre-commit run --all-files
+
+  test-app:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+          cache-dependency-path: "requirements*.txt"
+      - name: Install dependencies
+        run: |
+          pip install wheel
+          pip install -r requirements.txt coveralls
+        env:
+          PIP_USE_MIRRORS: true
+      - name: Run tests and coverage
+        run: |
+          python vestings/exporter.py --chain-id 5 --output-directory ../try --process-vestings --generate-proofs --export allocations
