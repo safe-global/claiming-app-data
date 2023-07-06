@@ -54,7 +54,7 @@ Deployment on staging can be started using `Deploy Guardians` action. Action run
 
 ### Production
 Deployment to production is done with `Deploy All (Release)` action. Action is triggered by publishing new release:
-1. Draft a release and tag it with vx.y.z version tag. 
+1. Draft a release and tag it with vx.y.z version tag.
 2. Deployment action will be triggered for release.
 3. Ask devops to deploy data to production.
 
@@ -62,9 +62,9 @@ Deployment to production is done with `Deploy All (Release)` action. Action is t
 
 - Place csv with guardian data under `guardians/assets/guardians.csv`.
 
-- Not all guardian images could be scaled to square dimensions without distorting the image. 
-Separate versions of images were created and placed under `guardians/assets/images` for such guardians. 
-This image collection should be extended if another guardian is added, that has long or wide image. 
+- Not all guardian images could be scaled to square dimensions without distorting the image.
+Separate versions of images were created and placed under `guardians/assets/images` for such guardians.
+This image collection should be extended if another guardian is added, that has long or wide image.
 Images from `guardians/assets/images` will be taken for a guardian during conversion instead of an image specified by a link.
 
 - Naming convention for image files under `guardians/assets/images`:
@@ -72,10 +72,10 @@ Images from `guardians/assets/images` will be taken for a guardian during conver
 <guardian name>.png
 ```
 
-### Guardians CSV 
+### Guardians CSV
 Guardians csv file contains following fields
 
- - Guardian name 
+ - Guardian name
  - Description of reasons for becoming a delegate
  - Description of former contributions
  - Guardian address or ENS name
@@ -110,7 +110,7 @@ Workflow input parameter `chain_id` must be selected before action can be starte
 ### Production
 
 Deployment to production is done with `Deploy All (Release)` action. Action is triggered by publishing new release.
-1. Draft a release and tag it with vx.y.z version tag. 
+1. Draft a release and tag it with vx.y.z version tag.
 2. Deployment action will be triggered for release.
 3. Ask devops to deploy data to production.
 
@@ -164,7 +164,7 @@ Contains all defined allocation. Proofs are not included.
             "durationWeeks": integer,
             "startDate": timestamp,
             "amount": "amount in wei",
-            "curve": integer 
+            "curve": integer
         },
         ...
     ],
@@ -186,6 +186,8 @@ source env/bin/activate
 Install dependencies
 ```
 pip install -r requirements.txt
+pip install pre-commit
+pre-commit install -f
 ```
 
 ## Guardians
@@ -214,7 +216,7 @@ Guardian images: `../data/guardians/images/`
 
 ## Vestings
 
-Place vesting csv files for a network under `vestings/assets/{chain_id}`. 
+Place vesting csv files for a network under `vestings/assets/{chain_id}`.
 Naming should be `user_airdrop.csv` for user airdrop and `ecosystem_airdrop.csv` for ecosystem airdrop.
 
 ### Generating
@@ -227,7 +229,7 @@ cd vestings
 python exporter.py --chain-id 1 --output-directory ../data/allocations --process-vestings --generate-proofs --export allocations
 ```
 
-If you want to see all possible parameters 
+If you want to see all possible parameters
 ```
 python vestings/exporter.py -h
 ```

@@ -1,21 +1,22 @@
-from enum import Enum
 import argparse
+import json
 import os
 import shutil
-import json
+from enum import Enum
 from json import JSONEncoder
-from database import get_db, create_db, VestingModel
+
 import sqlalchemy.orm as orm
-from csv_parser import parse_vestings_csv
-from proof_generator import generate_and_save_proofs, generate_and_print_root
-from constants import *
 from addresses import get_airdrop_addresses
+from csv_parser import parse_vestings_csv
+from database import VestingModel, create_db, get_db
+from hexbytes import HexBytes
+from proof_generator import generate_and_print_root, generate_and_save_proofs
 from web3 import Web3
 
 
 def prepare_db(db_file):
     print(80 * "-")
-    print(f"Creating database")
+    print("Creating database")
 
     if not os.path.exists(os.path.dirname(db_file)):
         os.makedirs(os.path.dirname(db_file))
@@ -39,13 +40,13 @@ def generate_proofs(db_file, chain_id, verbose):
 
 def generate_roots(db: orm.Session, chain_id):
     for tag in ("user", "user_v2", "ecosystem"):
-        generate_and_print_root(db, tags, chain_id)
+        generate_and_print_root(db, tag, chain_id)
 
 
 class Export(Enum):
-    none = 'none'
-    snapshot = 'snapshot'
-    allocations = 'allocations'
+    none = "none"
+    snapshot = "snapshot"
+    allocations = "allocations"
 
     def __str__(self):
         return self.name
@@ -65,19 +66,21 @@ class Export(Enum):
             return s
 
 
-def export_data(db: orm.Session, chain_id, output_directory, verbose, export_type=Export.snapshot):
+def export_data(
+    db: orm.Session, chain_id, output_directory, verbose, export_type=Export.snapshot
+):
     class VestingData:
         def __init__(
-                self,
-                tag,
-                account,
-                chainId,
-                contract,
-                vestingId,
-                durationWeeks,
-                startDate,
-                amount,
-                curve
+            self,
+            tag,
+            account,
+            chainId,
+            contract,
+            vestingId,
+            durationWeeks,
+            startDate,
+            amount,
+            curve,
         ):
             self.tag = tag
             self.account = account
@@ -91,17 +94,17 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
 
     class VestingDataWithProof:
         def __init__(
-                self,
-                tag,
-                account,
-                chainId,
-                contract,
-                vestingId,
-                durationWeeks,
-                startDate,
-                amount,
-                curve,
-                proof
+            self,
+            tag,
+            account,
+            chainId,
+            contract,
+            vestingId,
+            durationWeeks,
+            startDate,
+            amount,
+            curve,
+            proof,
         ):
             self.tag = tag
             self.account = account
@@ -116,7 +119,6 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
 
     class VestingEncoder(JSONEncoder):
         def default(self, o):
-
             d = dict(o.__dict__)
             for k, v in list(d.items()):
                 if v is None:
@@ -139,7 +141,7 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
             durationWeeks=model.duration_weeks,
             startDate=model.start_date,
             amount=model.amount,
-            curve=model.curve_type
+            curve=model.curve_type,
         )
 
         return vesting_data
@@ -157,7 +159,7 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
             startDate=model.start_date,
             amount=model.amount,
             curve=model.curve_type,
-            proof=list(map(map_proof, model.proofs))
+            proof=list(map(map_proof, model.proofs)),
         )
 
         return vesting_data
@@ -168,7 +170,9 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
         print(80 * "-")
 
     if export_type == Export.snapshot:
-        if os.path.exists(f"{output_directory}/{chain_id}/snapshot-allocations-data.json"):
+        if os.path.exists(
+            f"{output_directory}/{chain_id}/snapshot-allocations-data.json"
+        ):
             os.remove(f"{output_directory}/{chain_id}/snapshot-allocations-data.json")
     else:
         if os.path.exists(f"{output_directory}/{chain_id}"):
@@ -179,10 +183,12 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
 
     vestings = list(
         map(
-            map_vesting_with_proof if export_type == Export.allocations else map_vesting,
+            map_vesting_with_proof
+            if export_type == Export.allocations
+            else map_vesting,
             db.query(VestingModel)
             .where(VestingModel.chain_id == chain_id)
-            .order_by(VestingModel.owner)
+            .order_by(VestingModel.owner),
         )
     )
 
@@ -190,7 +196,6 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
 
     i = 0
     while i < len(vestings):
-
         vesting_array = []
 
         vesting = vestings[i]
@@ -208,124 +213,116 @@ def export_data(db: orm.Session, chain_id, output_directory, verbose, export_typ
         if export_type == Export.snapshot:
             result.append(vesting_array)
         else:
-            with open(f"{output_directory}/{chain_id}/{vesting.account}.json", "w") as file:
+            with open(
+                f"{output_directory}/{chain_id}/{vesting.account}.json", "w"
+            ) as file:
                 file.write(json.dumps(vesting_array, indent=4, cls=VestingEncoder))
         i = j
 
     if export_type == Export.snapshot:
-        with open(f"{output_directory}/{chain_id}/snapshot-allocations-data.json", "w") as file:
+        with open(
+            f"{output_directory}/{chain_id}/snapshot-allocations-data.json", "w"
+        ) as file:
             file.write(json.dumps(result, indent=4, cls=VestingEncoder))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Vesting data converter and exporter.")
 
-    parser = argparse.ArgumentParser(description='Vesting data converter and exporter.')
-
-    parser.add_argument(
-        '--chain-id',
-        dest='chain_id',
-        help='chain id',
-        required=True
-    )
+    parser.add_argument("--chain-id", dest="chain_id", help="chain id", required=True)
 
     parser.add_argument(
-        '--output-directory',
-        dest='output_dir',
-        default='../data/allocations/',
-        help='output directory',
-        required=False
-    )
-
-    parser.add_argument(
-        '--db-file',
-        dest='db_file',
-        default='intermediates/allocations.db',
+        "--output-directory",
+        dest="output_dir",
+        default="../data/allocations/",
+        help="output directory",
         required=False,
-        help='path to a database file'
     )
 
     parser.add_argument(
-        '--clear-db',
-        dest='clear_db',
-        action='store_const',
+        "--db-file",
+        dest="db_file",
+        default="intermediates/allocations.db",
+        required=False,
+        help="path to a database file",
+    )
+
+    parser.add_argument(
+        "--clear-db",
+        dest="clear_db",
+        action="store_const",
         const=True,
         default=False,
-        help='clear database',
-        required=False
+        help="clear database",
+        required=False,
     )
 
     parser.add_argument(
-        '--start-date',
-        dest='start_date',
-        help='start date timestamp',
-        required=False
+        "--start-date", dest="start_date", help="start date timestamp", required=False
     )
 
     parser.add_argument(
-        '--duration',
-        dest='duration',
-        help='duration in weeks',
-        required=False
+        "--duration", dest="duration", help="duration in weeks", required=False
     )
 
     parser.add_argument(
-        '--process-vestings',
-        dest='process_vestings',
-        action='store_const',
+        "--process-vestings",
+        dest="process_vestings",
+        action="store_const",
         const=True,
         default=False,
-        help='process vestings',
-        required=False
+        help="process vestings",
+        required=False,
     )
 
     parser.add_argument(
-        '--process-investor-vestings',
-        dest='process_investor_vestings',
-        action='store_const',
+        "--process-investor-vestings",
+        dest="process_investor_vestings",
+        action="store_const",
         const=True,
         default=False,
-        help='process investor vestings',
-        required=False
+        help="process investor vestings",
+        required=False,
     )
 
     parser.add_argument(
-        '--generate-proofs',
-        dest='generate_proofs',
-        action='store_const',
+        "--generate-proofs",
+        dest="generate_proofs",
+        action="store_const",
         const=True,
         default=False,
-        help='generate proofs',
-        required=False
+        help="generate proofs",
+        required=False,
     )
 
     parser.add_argument(
-        '--generate-root',
-        dest='generate_root',
-        action='store_const',
+        "--generate-root",
+        dest="generate_root",
+        action="store_const",
         const=True,
         default=False,
-        help='generate root',
-        required=False
+        help="generate root",
+        required=False,
     )
 
     parser.add_argument(
-        '--export',
+        "--export",
         type=Export.argparse,
         choices=list(Export),
-        dest='export',
+        dest="export",
         default=Export.none,
-        help='export type (default none)',
-        required=False
+        help="export type (default none)",
+        required=False,
     )
 
     parser.add_argument(
-        '--verbose',
-        dest='verbose',
-        action='store_const',
+        "--verbose",
+        dest="verbose",
+        action="store_const",
         const=True,
         default=False,
-        help='verbose',
-        required=False
+        help="verbose",
+        required=False,
     )
 
     args = parser.parse_args()
@@ -341,10 +338,14 @@ if __name__ == '__main__':
     db = next(get_db(args.db_file))
 
     if args.process_vestings:
-        process_vestings(db, int(args.chain_id), args.verbose, args.start_date, args.duration)
+        process_vestings(
+            db, int(args.chain_id), args.verbose, args.start_date, args.duration
+        )
 
     if args.process_investor_vestings:
-        process_investor_vestings(db, int(args.chain_id), args.verbose, args.start_date, args.duration)
+        process_investor_vestings(
+            db, int(args.chain_id), args.verbose, args.start_date, args.duration
+        )
 
     if args.generate_root:
         generate_roots(db, int(args.chain_id))
@@ -352,4 +353,10 @@ if __name__ == '__main__':
         if args.generate_proofs:
             generate_proofs(args.db_file, int(args.chain_id), args.verbose)
         if args.export != Export.none:
-            export_data(db, int(args.chain_id), os.path.dirname(args.output_dir), args.verbose, args.export)
+            export_data(
+                db,
+                int(args.chain_id),
+                os.path.dirname(args.output_dir),
+                args.verbose,
+                args.export,
+            )

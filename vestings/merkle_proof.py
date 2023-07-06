@@ -1,21 +1,20 @@
 import math
-from hexbytes import HexBytes
+
 from eth_abi import abi
+from hexbytes import HexBytes
 from web3 import Web3
 
-
-EMPTY_HASH = HexBytes(Web3.solidity_keccak(['bytes'], [bytes(HexBytes("0x"))])).hex()
+EMPTY_HASH = HexBytes(Web3.solidity_keccak(["bytes"], [bytes(HexBytes("0x"))])).hex()
 
 
 def combine_and_hash(leaf1: str, leaf2: str):
     combined_hash = Web3.solidity_keccak(
-        ['bytes'],
+        ["bytes"],
         [
             abi.encode(
-                ('bytes32', 'bytes32'),
-                (bytes(HexBytes(leaf1)), bytes(HexBytes(leaf2)))
+                ("bytes32", "bytes32"), (bytes(HexBytes(leaf1)), bytes(HexBytes(leaf2)))
             )
-        ]
+        ],
     )
     return HexBytes(combined_hash).hex()
 
@@ -30,7 +29,9 @@ def generate_vestings_tree(elements):
         while i < count:
             leaf1 = previous_level[i]
             leaf2 = EMPTY_HASH if i + 1 >= count else previous_level[i + 1]
-            if int.from_bytes(bytes(HexBytes(leaf1)), byteorder='big', signed=False) < int.from_bytes(bytes(HexBytes(leaf2)), byteorder='big', signed=False):
+            if int.from_bytes(
+                bytes(HexBytes(leaf1)), byteorder="big", signed=False
+            ) < int.from_bytes(bytes(HexBytes(leaf2)), byteorder="big", signed=False):
                 current_level.append(combine_and_hash(leaf1, leaf2))
             else:
                 current_level.append(combine_and_hash(leaf2, leaf1))
@@ -83,7 +84,11 @@ def generate(input, element=None):
                 proof.append(leaf1)
                 elements[int(i / 2)] = element
             else:
-                if int.from_bytes(bytes(HexBytes(leaf1)), byteorder='big', signed=False) < int.from_bytes(bytes(HexBytes(leaf2)), byteorder='big', signed=False):
+                if int.from_bytes(
+                    bytes(HexBytes(leaf1)), byteorder="big", signed=False
+                ) < int.from_bytes(
+                    bytes(HexBytes(leaf2)), byteorder="big", signed=False
+                ):
                     elements[int(i / 2)] = combine_and_hash(leaf1, leaf2)
                 else:
                     elements[int(i / 2)] = combine_and_hash(leaf2, leaf1)
