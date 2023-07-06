@@ -8,13 +8,14 @@ from vesting import Vesting
 from web3 import Web3
 import os
 
+CURRENT_DIRECTORY = os.path.dirname(__file__)
 
 def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, duration):
     vesting_file = {
-        "user": f"assets/{chain_id}/user_airdrop.csv",
-        "user_v2": f"assets/{chain_id}/user_airdrop_v2.csv",
-        "ecosystem": f"assets/{chain_id}/ecosystem_airdrop.csv",
-        "investor": f"assets/{chain_id}/investor_vestings.csv",
+        "user": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop.csv"),
+        "user_v2": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop_v2.csv"),
+        "ecosystem": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/ecosystem_airdrop.csv"),
+        "investor": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/investor_vestings.csv"),
     }.get(type)
     if not vesting_file:
         raise ValueError(f"Not a valid vestings type: {type}")
