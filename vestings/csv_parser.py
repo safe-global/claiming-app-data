@@ -1,21 +1,28 @@
-import sqlalchemy.orm as orm
-from database import VestingModel
-from constants import *
-from addresses import get_airdrop_addresses
 import csv
+import os
+
+import sqlalchemy.orm as orm
+from addresses import get_airdrop_addresses
+from database import VestingModel
 from dateutil.parser import parse
 from vesting import Vesting
 from web3 import Web3
-import os
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
+
 
 def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, duration):
     vesting_file = {
         "user": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop.csv"),
-        "user_v2": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop_v2.csv"),
-        "ecosystem": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/ecosystem_airdrop.csv"),
-        "investor": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/investor_vestings.csv"),
+        "user_v2": os.path.join(
+            CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop_v2.csv"
+        ),
+        "ecosystem": os.path.join(
+            CURRENT_DIRECTORY, f"assets/{chain_id}/ecosystem_airdrop.csv"
+        ),
+        "investor": os.path.join(
+            CURRENT_DIRECTORY, f"assets/{chain_id}/investor_vestings.csv"
+        ),
     }.get(type)
     if not vesting_file:
         raise ValueError(f"Not a valid vestings type: {type}")
@@ -23,8 +30,7 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, dur
     if not os.path.exists(vesting_file):
         print(vesting_file, "does not exist")
 
-
-    with open(vesting_file, mode='r') as csv_file:
+    with open(vesting_file, mode="r") as csv_file:
         csv_reader = csv.DictReader(csv_file)
         line_count = 0
 
@@ -35,7 +41,6 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, dur
         vesting_models = []
 
         for row in csv_reader:
-
             owner = Web3.to_checksum_address(row["owner"])
 
             duration_weeks: int
@@ -54,16 +59,27 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, dur
                 if "startDate" in row.keys():
                     start_date_timestamp = parse(row["startDate"]).timestamp()
                 else:
-                    start_date_timestamp = parse("2018-09-27T10:00:00+00:00").timestamp()
+                    start_date_timestamp = parse(
+                        "2018-09-27T10:00:00+00:00"
+                    ).timestamp()
 
             amount = row["amount"]
             # For user_v2, amount has decimals
-            if type == 'user_v2':
-                amount = str(Web3.to_wei(row["amount"], 'ether'))
+            if type == "user_v2":
+                amount = str(Web3.to_wei(row["amount"], "ether"))
 
             curve_type = 0
 
-            vesting = Vesting(None, type, owner, curve_type, duration_weeks, start_date_timestamp, amount, None)
+            vesting = Vesting(
+                None,
+                type,
+                owner,
+                curve_type,
+                duration_weeks,
+                start_date_timestamp,
+                amount,
+                None,
+            )
 
             airdrop_address = get_airdrop_addresses(chain_id)[type]
 
@@ -86,7 +102,7 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, dur
                 curve_type=curve_type,
                 duration_weeks=duration_weeks,
                 start_date=start_date_timestamp,
-                amount=amount
+                amount=amount,
             )
 
             vesting_models.append(vesting_model)
@@ -99,4 +115,4 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, dur
         db.bulk_save_objects(vesting_models)
         db.commit()
 
-        print(f'Processed {line_count} {type} vestings.')
+        print(f"Processed {line_count} {type} vestings.")
