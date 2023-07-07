@@ -10,7 +10,7 @@ from constants import (
 )
 
 
-def get_airdrop_addresses(chain_id):
+def get_airdrop_addresses(chain_id: int):
     return {
         "user": {
             1: MAINNET_USER_AIRDROP_ADDRESS,

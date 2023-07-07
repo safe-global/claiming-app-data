@@ -19,15 +19,15 @@ from web3 import Web3
 class VestingData:
     def __init__(
         self,
-        tag,
-        account,
-        chainId,
-        contract,
-        vestingId,
-        durationWeeks,
-        startDate,
-        amount,
-        curve,
+        tag: str,
+        account: ChecksumAddress,
+        chainId: int,
+        contract: ChecksumAddress,
+        vestingId: str,
+        durationWeeks: int,
+        startDate: int,
+        amount: str,
+        curve: int,
     ):
         self.tag = tag
         self.account = account
@@ -51,7 +51,7 @@ class VestingDataWithProof(VestingData):
         self,
         **kwargs,
     ):
-        self.proof = kwargs.pop("proof")
+        self.proof: str = kwargs.pop("proof")
         super().__init__(**kwargs)
 
 
@@ -98,21 +98,25 @@ def prepare_db(db_file):
     create_db(db_file)
 
 
-def process_vestings(db: orm.Session, chain_id, verbose, start_date, duration):
+def process_vestings(
+    db: orm.Session, chain_id: int, verbose: bool, start_date: str, duration: str
+):
     for tag in ("user", "user_v2", "ecosystem"):
         parse_vestings_csv(db, tag, chain_id, verbose, start_date, duration)
 
 
-def process_investor_vestings(db: orm.Session, chain_id, verbose, start_date, duration):
+def process_investor_vestings(
+    db: orm.Session, chain_id: int, verbose: bool, start_date: str, duration: str
+):
     parse_vestings_csv(db, "investor", chain_id, verbose, start_date, duration)
 
 
-def generate_proofs(db_file, chain_id, verbose):
+def generate_proofs(db_file: str, chain_id: int, verbose: bool):
     for tag in ("user", "user_v2", "ecosystem"):
         generate_and_save_proofs(db_file, tag, chain_id, verbose)
 
 
-def generate_roots(db: orm.Session, chain_id):
+def generate_roots(db: orm.Session, chain_id: int):
     for tag in ("user", "user_v2", "ecosystem"):
         generate_and_print_root(db, tag, chain_id)
 
@@ -120,7 +124,7 @@ def generate_roots(db: orm.Session, chain_id):
 def export_data(
     db: orm.Session, chain_id, output_directory, verbose, export_type=Export.snapshot
 ):
-    def map_proof(proof):
+    def map_proof(proof) -> str:
         return HexBytes(proof.proof).hex()
 
     def map_vesting(model):

@@ -32,15 +32,19 @@ class ProofModel(Base):
     vesting = orm.relationship("VestingModel", back_populates="proofs", viewonly=True)
 
 
-def create_db(db_file):
-    DB_URL = f"sqlite:///{db_file}"
-    engine = sqlalchemy.create_engine(DB_URL, connect_args={"check_same_thread": False})
+def get_db_url(db_file: str) -> str:
+    return f"sqlite:///{db_file}"
+
+
+def create_db(db_file: str):
+    db_url = get_db_url(db_file)
+    engine = sqlalchemy.create_engine(db_url, connect_args={"check_same_thread": False})
     Base.metadata.create_all(bind=engine)
 
 
-def get_db(db_file):
-    DB_URL = f"sqlite:///{db_file}"
-    engine = sqlalchemy.create_engine(DB_URL, connect_args={"check_same_thread": False})
+def get_db(db_file: str):
+    db_url = get_db_url(db_file)
+    engine = sqlalchemy.create_engine(db_url, connect_args={"check_same_thread": False})
     LocalSession = orm.sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = LocalSession()
     try:
