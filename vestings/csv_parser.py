@@ -59,9 +59,14 @@ def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, dur
                 if "startDate" in row.keys():
                     start_date_timestamp = parse(row["startDate"]).timestamp()
                 else:
-                    start_date_timestamp = parse(
-                        "2018-09-27T10:00:00+00:00"
-                    ).timestamp()
+                    if type == "user_v2":
+                        start_date_timestamp = parse(
+                            "2022-09-01T10:00:00+00:00"
+                        ).timestamp()
+                    else:
+                        start_date_timestamp = parse(
+                            "2018-09-27T10:00:00+00:00"
+                        ).timestamp()
 
             amount = row["amount"]
             # For user_v2, amount has decimals
