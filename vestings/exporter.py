@@ -14,6 +14,72 @@ from proof_generator import generate_and_print_root, generate_and_save_proofs
 from web3 import Web3
 
 
+class VestingData:
+    def __init__(
+        self,
+        tag,
+        account,
+        chainId,
+        contract,
+        vestingId,
+        durationWeeks,
+        startDate,
+        amount,
+        curve,
+    ):
+        self.tag = tag
+        self.account = account
+        self.chainId = chainId
+        self.contract = contract
+        self.vestingId = vestingId
+        self.durationWeeks = durationWeeks
+        self.startDate = startDate
+        self.amount = amount
+        self.curve = curve
+
+
+class VestingDataWithProof(VestingData):
+    def __init__(
+        self,
+        **kwargs,
+    ):
+        self.proof = kwargs.pop("proof")
+        super().__init__(**kwargs)
+
+
+class VestingEncoder(JSONEncoder):
+    def default(self, o):
+        d = dict(o.__dict__)
+        for k, v in list(d.items()):
+            if v is None:
+                del d[k]
+
+        return d
+
+
+class Export(Enum):
+    none = "none"
+    snapshot = "snapshot"
+    allocations = "allocations"
+
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def from_string(s):
+        try:
+            return Export[s]
+        except KeyError:
+            raise ValueError()
+
+    @staticmethod
+    def argparse(s):
+        try:
+            return Export[s.lower()]
+        except KeyError:
+            return s
+
+
 def prepare_db(db_file):
     print(80 * "-")
     print("Creating database")
@@ -43,89 +109,9 @@ def generate_roots(db: orm.Session, chain_id):
         generate_and_print_root(db, tag, chain_id)
 
 
-class Export(Enum):
-    none = "none"
-    snapshot = "snapshot"
-    allocations = "allocations"
-
-    def __str__(self):
-        return self.name
-
-    @staticmethod
-    def from_string(s):
-        try:
-            return Export[s]
-        except KeyError:
-            raise ValueError()
-
-    @staticmethod
-    def argparse(s):
-        try:
-            return Export[s.lower()]
-        except KeyError:
-            return s
-
-
 def export_data(
     db: orm.Session, chain_id, output_directory, verbose, export_type=Export.snapshot
 ):
-    class VestingData:
-        def __init__(
-            self,
-            tag,
-            account,
-            chainId,
-            contract,
-            vestingId,
-            durationWeeks,
-            startDate,
-            amount,
-            curve,
-        ):
-            self.tag = tag
-            self.account = account
-            self.chainId = chainId
-            self.contract = contract
-            self.vestingId = vestingId
-            self.durationWeeks = durationWeeks
-            self.startDate = startDate
-            self.amount = amount
-            self.curve = curve
-
-    class VestingDataWithProof:
-        def __init__(
-            self,
-            tag,
-            account,
-            chainId,
-            contract,
-            vestingId,
-            durationWeeks,
-            startDate,
-            amount,
-            curve,
-            proof,
-        ):
-            self.tag = tag
-            self.account = account
-            self.chainId = chainId
-            self.contract = contract
-            self.vestingId = vestingId
-            self.durationWeeks = durationWeeks
-            self.startDate = startDate
-            self.amount = amount
-            self.curve = curve
-            self.proof = proof
-
-    class VestingEncoder(JSONEncoder):
-        def default(self, o):
-            d = dict(o.__dict__)
-            for k, v in list(d.items()):
-                if v is None:
-                    del d[k]
-
-            return d
-
     def map_proof(proof):
         return HexBytes(proof.proof).hex()
 
@@ -169,17 +155,17 @@ def export_data(
     if verbose:
         print(80 * "-")
 
+    export_directory = f"{output_directory}/{chain_id}"
     if export_type == Export.snapshot:
-        if os.path.exists(
-            f"{output_directory}/{chain_id}/snapshot-allocations-data.json"
-        ):
-            os.remove(f"{output_directory}/{chain_id}/snapshot-allocations-data.json")
+        if os.path.exists(f"{export_directory}/snapshot-allocations-data.json"):
+            os.remove(f"{export_directory}/snapshot-allocations-data.json")
     else:
-        if os.path.exists(f"{output_directory}/{chain_id}"):
-            shutil.rmtree(f"{output_directory}/{chain_id}")
+        if os.path.exists(f"{export_directory}"):
+            shutil.rmtree(f"{export_directory}")
 
-    if not os.path.exists(f"{output_directory}/{chain_id}"):
-        os.makedirs(f"{output_directory}/{chain_id}")
+    if not os.path.exists(f"{export_directory}"):
+        os.makedirs(f"{export_directory}")
+        print(f"Exporting data to {export_directory}")
 
     vestings = list(
         map(
@@ -213,16 +199,12 @@ def export_data(
         if export_type == Export.snapshot:
             result.append(vesting_array)
         else:
-            with open(
-                f"{output_directory}/{chain_id}/{vesting.account}.json", "w"
-            ) as file:
+            with open(f"{export_directory}/{vesting.account}.json", "w") as file:
                 file.write(json.dumps(vesting_array, indent=4, cls=VestingEncoder))
         i = j
 
     if export_type == Export.snapshot:
-        with open(
-            f"{output_directory}/{chain_id}/snapshot-allocations-data.json", "w"
-        ) as file:
+        with open(f"{export_directory}/snapshot-allocations-data.json", "w") as file:
             file.write(json.dumps(result, indent=4, cls=VestingEncoder))
 
 
@@ -356,7 +338,7 @@ if __name__ == "__main__":
             export_data(
                 db,
                 int(args.chain_id),
-                os.path.dirname(args.output_dir),
+                args.output_dir,
                 args.verbose,
                 args.export,
             )
