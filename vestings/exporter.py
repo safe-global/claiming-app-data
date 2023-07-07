@@ -4,11 +4,13 @@ import os
 import shutil
 from enum import Enum
 from json import JSONEncoder
+from typing import Any, Dict
 
 import sqlalchemy.orm as orm
 from addresses import get_airdrop_addresses
 from csv_parser import parse_vestings_csv
 from database import VestingModel, create_db, get_db
+from eth_typing import ChecksumAddress
 from hexbytes import HexBytes
 from proof_generator import generate_and_print_root, generate_and_save_proofs
 from web3 import Web3
@@ -36,6 +38,12 @@ class VestingData:
         self.startDate = startDate
         self.amount = amount
         self.curve = curve
+
+    def __str__(self) -> str:
+        return f"{self.tag} - {self.account} - {self.contract}"
+
+    def __repr__(self) -> str:
+        return str(self)
 
 
 class VestingDataWithProof(VestingData):
@@ -178,34 +186,25 @@ def export_data(
         )
     )
 
-    result = []
+    account_with_vestings: Dict[ChecksumAddress, Any] = {}
+    for vesting in vestings:
+        account_with_vestings.setdefault(vesting.account, []).append(vesting)
 
-    i = 0
-    while i < len(vestings):
-        vesting_array = []
-
-        vesting = vestings[i]
-
+    for account, vesting_array in account_with_vestings.items():
         if verbose:
-            print(f"Writing {vesting.account} vestings to file")
-
-        vesting_array.append(vesting)
-
-        j = i + 1
-        while j < len(vestings) and vestings[j].account == vesting.account:
-            vesting_array.append(vestings[j])
-            j = j + 1
-
-        if export_type == Export.snapshot:
-            result.append(vesting_array)
-        else:
-            with open(f"{export_directory}/{vesting.account}.json", "w") as file:
+            print(f"Writing {account} vestings to file")
+        if export_type != Export.snapshot:
+            print(vesting_array)
+            with open(f"{export_directory}/{account}.json", "w") as file:
                 file.write(json.dumps(vesting_array, indent=4, cls=VestingEncoder))
-        i = j
 
     if export_type == Export.snapshot:
         with open(f"{export_directory}/snapshot-allocations-data.json", "w") as file:
-            file.write(json.dumps(result, indent=4, cls=VestingEncoder))
+            file.write(
+                json.dumps(
+                    list(account_with_vestings.values()), indent=4, cls=VestingEncoder
+                )
+            )
 
 
 if __name__ == "__main__":
