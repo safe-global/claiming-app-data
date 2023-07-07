@@ -11,7 +11,14 @@ from web3 import Web3
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 
 
-def parse_vestings_csv(db: orm.Session, type, chain_id, verbose, start_date, duration):
+def parse_vestings_csv(
+    db: orm.Session,
+    type: str,
+    chain_id: int,
+    verbose: bool,
+    start_date: str,
+    duration: str,
+):
     vesting_file = {
         "user": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop.csv"),
         "user_v2": os.path.join(

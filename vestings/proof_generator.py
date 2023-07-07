@@ -4,7 +4,9 @@ from database import ProofModel, VestingModel, get_db
 from joblib import Parallel, delayed
 
 
-def generate_and_safe_proof_for_vesting(db_file, vestings_tree, vesting_id, verbose):
+def generate_and_safe_proof_for_vesting(
+    db_file: str, vestings_tree, vesting_id, verbose
+):
     db = next(get_db(db_file))
 
     proof = merkle_proof.extract_proof(vestings_tree, vesting_id)
@@ -24,7 +26,7 @@ def generate_and_safe_proof_for_vesting(db_file, vestings_tree, vesting_id, verb
         print(f"{proof}")
 
 
-def generate_and_save_proofs(db_file, type, chain_id, verbose):
+def generate_and_save_proofs(db_file: str, type: str, chain_id: int, verbose: bool):
     print(80 * "-")
     print(f"Generating {type} vestings proofs")
     if verbose:
@@ -47,7 +49,7 @@ def generate_and_save_proofs(db_file, type, chain_id, verbose):
     )
 
 
-def generate_and_print_root(db: orm.Session, type, chain_id):
+def generate_and_print_root(db: orm.Session, type: str, chain_id: int):
     print(80 * "-")
     print(f"Generating {type} vestings root")
     print(80 * "-")
