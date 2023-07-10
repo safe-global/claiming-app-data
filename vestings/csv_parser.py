@@ -16,8 +16,8 @@ def parse_vestings_csv(
     type: str,
     chain_id: int,
     verbose: bool,
-    start_date: str,
-    duration: str,
+    start_date: int,
+    duration: int,
 ):
     vesting_file = {
         "user": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop.csv"),
@@ -55,7 +55,7 @@ def parse_vestings_csv(
                 duration_weeks = duration
             else:
                 if "duration" in row.keys():
-                    duration_weeks = row["duration"]
+                    duration_weeks = int(row["duration"])
                 else:
                     duration_weeks = 416
 
@@ -74,11 +74,13 @@ def parse_vestings_csv(
                         start_date_timestamp = parse(
                             "2018-09-27T10:00:00+00:00"
                         ).timestamp()
+            start_date_timestamp = int(start_date_timestamp)
 
-            amount = row["amount"]
             # For user_v2, amount has decimals
             if type == "user_v2":
                 amount = str(Web3.to_wei(row["amount"], "ether"))
+            else:
+                amount = row["amount"]
 
             curve_type = 0
 

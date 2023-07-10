@@ -1,30 +1,24 @@
+from typing import Any, List, Optional
+
+from constants import DOMAIN_SEPARATOR_TYPEHASH, VESTING_TYPEHASH
 from eth_abi import abi
 from eth_abi.packed import encode_packed
+from eth_typing import ChecksumAddress, HexStr
 from hexbytes import HexBytes
 from web3 import Web3
-
-VESTING_TYPEHASH = HexBytes(
-    "0x43838b5ce9ca440d1ac21b07179a1fdd88aa2175e5ea103f6e37aa6d18ce78ad"
-)
-
-DOMAIN_SEPARATOR_TYPEHASH = HexBytes(
-    "0x47e79534a245952e8b16893a336b85a3d9ea9fa8c573f3d803afb92a79469218"
-)
-
-EMPTY_HASH = Web3.solidity_keccak(["bytes"], [bytes(HexBytes("0x"))])
 
 
 class Vesting:
     def __init__(
         self,
-        id: str,
-        type,
-        account,
-        curveType,
-        durationWeeks,
+        id: Optional[HexStr],
+        type: str,
+        account: ChecksumAddress,
+        curveType: int,
+        durationWeeks: int,
         startDate: int,
-        amount,
-        proof: list,
+        amount: str,  # Sqlite cannot handle integers this long
+        proof: Optional[List[Any]],
     ):
         self.id = id
         self.type = type
@@ -35,13 +29,13 @@ class Vesting:
         self.amount = amount
         self.proof = proof
 
-    def calculateHash(self, airdrop_address, chain_id):
+    def calculateHash(self, airdrop_address: ChecksumAddress, chain_id: int) -> HexStr:
         domain_separator = Web3.solidity_keccak(
             ["bytes"],
             [
                 abi.encode(
                     ("bytes32", "uint256", "address"),
-                    (bytes(DOMAIN_SEPARATOR_TYPEHASH), chain_id, airdrop_address.hex()),
+                    (DOMAIN_SEPARATOR_TYPEHASH, chain_id, airdrop_address),
                 )
             ],
         )
@@ -60,12 +54,12 @@ class Vesting:
                         "uint128",
                     ),
                     (
-                        bytes(VESTING_TYPEHASH),
+                        VESTING_TYPEHASH,
                         self.account,
                         self.curveType,
                         False,
-                        int(self.durationWeeks),
-                        int(self.startDate),
+                        self.durationWeeks,
+                        self.startDate,
                         int(self.amount),
                     ),
                 )
