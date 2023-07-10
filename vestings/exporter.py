@@ -89,14 +89,14 @@ class Export(Enum):
 
 
 def process_vestings(
-    db: orm.Session, chain_id: int, verbose: bool, start_date: str, duration: str
+    db: orm.Session, chain_id: int, verbose: bool, start_date: int, duration: int
 ):
     for tag in ("user", "user_v2", "ecosystem"):
         parse_vestings_csv(db, tag, chain_id, verbose, start_date, duration)
 
 
 def process_investor_vestings(
-    db: orm.Session, chain_id: int, verbose: bool, start_date: str, duration: str
+    db: orm.Session, chain_id: int, verbose: bool, start_date: int, duration: int
 ):
     parse_vestings_csv(db, "investor", chain_id, verbose, start_date, duration)
 
@@ -204,7 +204,9 @@ def export_data(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Vesting data converter and exporter.")
 
-    parser.add_argument("--chain-id", dest="chain_id", help="chain id", required=True)
+    parser.add_argument(
+        "--chain-id", dest="chain_id", help="chain id", required=True, type=int
+    )
 
     parser.add_argument(
         "--output-directory",
@@ -233,11 +235,19 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--start-date", dest="start_date", help="start date timestamp", required=False
+        "--start-date",
+        dest="start_date",
+        help="start date timestamp",
+        required=False,
+        type=int,
     )
 
     parser.add_argument(
-        "--duration", dest="duration", help="duration in weeks", required=False
+        "--duration",
+        dest="duration",
+        help="duration in weeks",
+        required=False,
+        type=int,
     )
 
     parser.add_argument(
@@ -314,23 +324,23 @@ if __name__ == "__main__":
 
     if args.process_vestings:
         process_vestings(
-            db, int(args.chain_id), args.verbose, args.start_date, args.duration
+            db, args.chain_id, args.verbose, args.start_date, args.duration
         )
 
     if args.process_investor_vestings:
         process_investor_vestings(
-            db, int(args.chain_id), args.verbose, args.start_date, args.duration
+            db, args.chain_id, args.verbose, args.start_date, args.duration
         )
 
     if args.generate_root:
-        generate_roots(db, int(args.chain_id))
+        generate_roots(db, args.chain_id)
     else:
         if args.generate_proofs:
-            generate_proofs(args.db_file, int(args.chain_id), args.verbose)
+            generate_proofs(args.db_file, args.chain_id, args.verbose)
         if args.export != Export.none:
             export_data(
                 db,
-                int(args.chain_id),
+                args.chain_id,
                 args.output_dir,
                 args.verbose,
                 args.export,

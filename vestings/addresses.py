@@ -1,3 +1,5 @@
+from typing import Dict
+
 from constants import (
     GOERLI_ECOSYSTEM_AIRDROP_ADDRESS,
     GOERLI_INVESTOR_VESTING_POOL_ADDRESS,
@@ -8,9 +10,10 @@ from constants import (
     MAINNET_USER_AIRDROP_ADDRESS,
     MAINNET_USER_V2_AIRDROP_ADDRESS,
 )
+from eth_typing import ChecksumAddress
 
 
-def get_airdrop_addresses(chain_id: int):
+def get_airdrop_addresses(chain_id: int) -> Dict[str, Dict[int, ChecksumAddress]]:
     return {
         "user": {
             1: MAINNET_USER_AIRDROP_ADDRESS,
