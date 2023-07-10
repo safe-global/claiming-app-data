@@ -1,3 +1,5 @@
+import os
+
 import sqlalchemy
 import sqlalchemy.ext.declarative as declarative
 import sqlalchemy.orm as orm
@@ -51,3 +53,13 @@ def get_db(db_file: str):
         yield db
     finally:
         db.close()
+
+
+def prepare_db(db_file):
+    print(80 * "-")
+    print("Creating database")
+
+    if not os.path.exists(os.path.dirname(db_file)):
+        os.makedirs(os.path.dirname(db_file))
+
+    create_db(db_file)

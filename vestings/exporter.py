@@ -9,7 +9,7 @@ from typing import Any, Dict
 import sqlalchemy.orm as orm
 from addresses import get_airdrop_addresses
 from csv_parser import parse_vestings_csv
-from database import VestingModel, create_db, get_db
+from database import VestingModel, get_db, prepare_db
 from eth_typing import ChecksumAddress
 from hexbytes import HexBytes
 from proof_generator import generate_and_print_root, generate_and_save_proofs
@@ -88,16 +88,6 @@ class Export(Enum):
             return s
 
 
-def prepare_db(db_file):
-    print(80 * "-")
-    print("Creating database")
-
-    if not os.path.exists(os.path.dirname(db_file)):
-        os.makedirs(os.path.dirname(db_file))
-
-    create_db(db_file)
-
-
 def process_vestings(
     db: orm.Session, chain_id: int, verbose: bool, start_date: str, duration: str
 ):
@@ -123,7 +113,7 @@ def generate_roots(db: orm.Session, chain_id: int):
 
 def export_data(
     db: orm.Session, chain_id, output_directory, verbose, export_type=Export.snapshot
-):
+) -> Dict[ChecksumAddress, Any]:
     def map_proof(proof) -> str:
         return HexBytes(proof.proof).hex()
 
@@ -198,7 +188,6 @@ def export_data(
         if verbose:
             print(f"Writing {account} vestings to file")
         if export_type != Export.snapshot:
-            print(vesting_array)
             with open(f"{export_directory}/{account}.json", "w") as file:
                 file.write(json.dumps(vesting_array, indent=4, cls=VestingEncoder))
 
@@ -209,6 +198,7 @@ def export_data(
                     list(account_with_vestings.values()), indent=4, cls=VestingEncoder
                 )
             )
+    return account_with_vestings
 
 
 if __name__ == "__main__":
