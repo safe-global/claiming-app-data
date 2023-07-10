@@ -57,7 +57,10 @@ def parse_vestings_csv(
                 if "duration" in row.keys():
                     duration_weeks = int(row["duration"])
                 else:
-                    duration_weeks = 416
+                    if type == "user_v2":
+                        duration_weeks = 208
+                    else:
+                        duration_weeks = 416
 
             start_date_timestamp: int
             if start_date is not None:
