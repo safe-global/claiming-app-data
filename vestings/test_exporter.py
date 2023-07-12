@@ -49,7 +49,7 @@ class TestExporter(unittest.TestCase):
                 "tag": "user_v2",
                 "account": "0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e",
                 "chainId": 5,
-                "contract": "0xA19C1d8faAc5d8379e90e22CA8F21cdd938a61ee",
+                "contract": "0x864c87C1bC9D29DFB59752336292520Ede64E5Eb",
                 "vestingId": "0x5b5229cee60155f268e77c64d9f4865b16ac43ce425d3a5ef4a1f5bf54050b95",
                 "durationWeeks": 208,
                 "startDate": 1662026400,
