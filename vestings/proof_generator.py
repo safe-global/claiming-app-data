@@ -36,7 +36,7 @@ def generate_and_save_proofs(db_file: str, type: str, chain_id: int, verbose: bo
     vestings = db.query(VestingModel).filter(
         VestingModel.type == type and VestingModel.chain_id == chain_id
     )
-    vesting_ids = list(map(lambda vesting: vesting.vesting_id, vestings))
+    vesting_ids = [vesting.vesting_id for vesting in vestings]
     vestings_tree = merkle_proof.generate_vestings_tree(vesting_ids)
 
     Parallel(n_jobs=1)(
@@ -57,7 +57,7 @@ def generate_and_print_root(db: orm.Session, type: str, chain_id: int):
     vestings = db.query(VestingModel).filter(
         VestingModel.type == type and VestingModel.chain_id == chain_id
     )
-    vesting_ids = list(map(lambda vesting: vesting.vesting_id, vestings))
+    vesting_ids = [vesting.vesting_id for vesting in vestings]
 
     if vesting_ids:
         root = merkle_proof.generate_root(vesting_ids)
