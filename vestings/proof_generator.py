@@ -1,15 +1,18 @@
+from typing import List
+
 import merkle_proof
-import sqlalchemy.orm as orm
+import sqlalchemy
 from database import ProofModel, VestingModel, get_db
+from eth_typing import HexStr
 from joblib import Parallel, delayed
 
 
 def generate_and_safe_proof_for_vesting(
-    db_file: str, vestings_tree, vesting_id, verbose
+    db_file: str, vestings_tree: List[List[HexStr]], vesting_id: HexStr, verbose: bool
 ):
     db = next(get_db(db_file))
 
-    proof = merkle_proof.extract_proof(vestings_tree, vesting_id)
+    proof = merkle_proof.extract_proofs(vestings_tree, vesting_id)
     proof_index = 0
 
     proof_models = []
@@ -33,8 +36,13 @@ def generate_and_save_proofs(db_file: str, type: str, chain_id: int, verbose: bo
         print(80 * "-")
 
     db = next(get_db(db_file))
-    vestings = db.query(VestingModel).filter(
-        VestingModel.type == type and VestingModel.chain_id == chain_id
+    # We are expecting to get VestingModel in insertion order
+    # Ordering by address would be better but it will break previous airdrops
+    vestings = (
+        db.query(VestingModel).filter(
+            VestingModel.type == type and VestingModel.chain_id == chain_id
+        )
+        # .order_by(sqlalchemy.asc(sqlalchemy.func.lower(VestingModel.owner)))
     )
     vesting_ids = [vesting.vesting_id for vesting in vestings]
     vestings_tree = merkle_proof.generate_vestings_tree(vesting_ids)
@@ -49,7 +57,7 @@ def generate_and_save_proofs(db_file: str, type: str, chain_id: int, verbose: bo
     )
 
 
-def generate_and_print_root(db: orm.Session, type: str, chain_id: int):
+def generate_and_print_root(db: sqlalchemy.orm.Session, type: str, chain_id: int):
     print(80 * "-")
     print(f"Generating {type} vestings root")
     print(80 * "-")

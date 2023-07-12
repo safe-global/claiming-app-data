@@ -46,5 +46,5 @@ jobs:
           PIP_USE_MIRRORS: true
       - name: Run tests
         run: |
-          python vestings/test_exporter.py
+          python vestings/tests.py
           python vestings/exporter.py --chain-id 5 --output-directory ./ --process-vestings --generate-proofs --export allocations
