@@ -50,7 +50,7 @@ class TestExporter(unittest.TestCase):
                 "account": "0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e",
                 "chainId": 5,
                 "contract": "0x864c87C1bC9D29DFB59752336292520Ede64E5Eb",
-                "vestingId": "0x5b5229cee60155f268e77c64d9f4865b16ac43ce425d3a5ef4a1f5bf54050b95",
+                "vestingId": "0x1e98e82b20b75cf087ab93e767219456ec4a629687408ec622deadaf642bae19",
                 "durationWeeks": 208,
                 "startDate": 1662026400,
                 "amount": "420690000000000000000",
