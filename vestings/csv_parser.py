@@ -75,7 +75,7 @@ def parse_vestings_csv(
                         ).timestamp()
                     else:
                         start_date_timestamp = parse(
-                            "2018-09-27T10:00:00+00:00"
+                            "2018-07-14T00:00:00+00:00"
                         ).timestamp()
             start_date_timestamp = int(start_date_timestamp)
 

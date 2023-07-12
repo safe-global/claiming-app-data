@@ -10,6 +10,7 @@ class TestExporter(unittest.TestCase):
     def test_export_data(self):
         random_filename = str(uuid.uuid4())
         db_path = f"/tmp/{random_filename}"
+        # Prepare database
         prepare_db(db_path)
         db = next(get_db(db_path))
 
@@ -34,22 +35,22 @@ class TestExporter(unittest.TestCase):
             {
                 "proof": [],
                 "tag": "user",
-                "account": "0xC642bEc0e4f69815e89723C09caA8DAa524cAc9c",
+                "account": "0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e",
                 "chainId": 5,
                 "contract": "0x07dA2049Fa8127eF6280631BCbc56881d764C8Ee",
-                "vestingId": "0x2bb9cf494fe2749da5aa9e392a4e134213930312d22049a4c099dcc48fad3c05",
+                "vestingId": "0x76699f526e8c062cc9db2004f7f3130a911208b3a18fc575760f830a73479011",
                 "durationWeeks": 416,
-                "startDate": 1538042400,
+                "startDate": 1531526400,
                 "amount": "23023120000000000000000",
                 "curve": 0,
             },
             {
                 "proof": [],
                 "tag": "user_v2",
-                "account": "0xC642bEc0e4f69815e89723C09caA8DAa524cAc9c",
+                "account": "0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e",
                 "chainId": 5,
                 "contract": "0xA19C1d8faAc5d8379e90e22CA8F21cdd938a61ee",
-                "vestingId": "0xcdd4faebcbfcfc6140a04951a018228bee1832f463c7c3a2901d60a845547e3b",
+                "vestingId": "0x5b5229cee60155f268e77c64d9f4865b16ac43ce425d3a5ef4a1f5bf54050b95",
                 "durationWeeks": 208,
                 "startDate": 1662026400,
                 "amount": "420690000000000000000",
@@ -58,12 +59,12 @@ class TestExporter(unittest.TestCase):
             {
                 "proof": [],
                 "tag": "ecosystem",
-                "account": "0xC642bEc0e4f69815e89723C09caA8DAa524cAc9c",
+                "account": "0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e",
                 "chainId": 5,
                 "contract": "0xEc6449091Ae23A92f856702F9452011E31E66C63",
-                "vestingId": "0x6c44fcbabe1216809436b73f63fc1ab4947679e834adcfa89240ed809ac53f17",
+                "vestingId": "0x5255888c86231e3d91e0bb705953cfc1b8a9071d387db27a805382ec38354919",
                 "durationWeeks": 416,
-                "startDate": 1538042400,
+                "startDate": 1531526400,
                 "amount": "43023120000000000000000",
                 "curve": 0,
             },
@@ -71,7 +72,7 @@ class TestExporter(unittest.TestCase):
 
         data = json.loads(
             json.dumps(
-                result["0xC642bEc0e4f69815e89723C09caA8DAa524cAc9c"],
+                result["0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e"],
                 indent=4,
                 cls=VestingEncoder,
             )
