@@ -62,3 +62,5 @@ def generate_and_print_root(db: orm.Session, type: str, chain_id: int):
     if vesting_ids:
         root = merkle_proof.generate_root(vesting_ids)
         print(f"{type} root: {root}")
+        required_number_tokens = sum(int(vesting.amount) for vesting in vestings)
+        print(f"{type} required number of tokens: {required_number_tokens}")
