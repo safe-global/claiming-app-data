@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import shutil
+import time
 from enum import Enum
 from json import JSONEncoder
 from typing import Any, Dict
@@ -312,6 +313,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    start_time = time.time()
+
     if args.clear_db:
         if os.path.exists(args.db_file):
             os.remove(args.db_file)
@@ -345,3 +348,5 @@ if __name__ == "__main__":
                 args.verbose,
                 args.export,
             )
+
+    print("Elapsed time: ", time.time() - start_time, "seconds")
