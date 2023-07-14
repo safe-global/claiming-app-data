@@ -1,4 +1,8 @@
-from typing import Any, List, Optional
+import dataclasses
+import json
+from enum import Enum
+from functools import cache
+from typing import List, Optional
 
 from constants import DOMAIN_SEPARATOR_TYPEHASH, VESTING_TYPEHASH
 from eth_abi import abi
@@ -8,38 +12,44 @@ from hexbytes import HexBytes
 from web3 import Web3
 
 
+class VestingType(Enum):
+    USER = 0
+    USER_V2 = 1
+    ECOSYSTEM = 2
+    INVESTOR = 3
+
+
+@cache
+def calculate_domain_separator(
+    airdrop_address: ChecksumAddress, chain_id: int
+) -> bytes:
+    return Web3.solidity_keccak(
+        ["bytes"],
+        [
+            abi.encode(
+                ("bytes32", "uint256", "address"),
+                (DOMAIN_SEPARATOR_TYPEHASH, chain_id, airdrop_address),
+            )
+        ],
+    )
+
+
+@dataclasses.dataclass
 class Vesting:
-    def __init__(
-        self,
-        id: Optional[HexStr],
-        type: str,
-        account: ChecksumAddress,
-        curveType: int,
-        durationWeeks: int,
-        startDate: int,
-        amount: str,  # Sqlite cannot handle integers this long
-        proof: Optional[List[Any]],
-    ):
-        self.id = id
-        self.type = type
-        self.account = account
-        self.curveType = curveType
-        self.durationWeeks = durationWeeks
-        self.startDate = startDate
-        self.amount = amount
-        self.proof = proof
+    vestingId: Optional[HexStr]
+    tag: VestingType
+    account: ChecksumAddress
+    contract: ChecksumAddress
+    chainId: int
+    curve: int
+    durationWeeks: int
+    startDate: int
+    amount: str
+    proof: List[HexStr]
 
-    def calculateHash(self, airdrop_address: ChecksumAddress, chain_id: int) -> HexStr:
-        domain_separator = Web3.solidity_keccak(
-            ["bytes"],
-            [
-                abi.encode(
-                    ("bytes32", "uint256", "address"),
-                    (DOMAIN_SEPARATOR_TYPEHASH, chain_id, airdrop_address),
-                )
-            ],
-        )
-
+    # TODO Calculate on init
+    def calculateHash(self) -> HexStr:
+        domain_separator = calculate_domain_separator(self.contract, self.chainId)
         vesting_data_hash = Web3.solidity_keccak(
             ["bytes"],
             [
@@ -56,7 +66,7 @@ class Vesting:
                     (
                         VESTING_TYPEHASH,
                         self.account,
-                        self.curveType,
+                        self.curve,
                         False,
                         self.durationWeeks,
                         self.startDate,
@@ -81,4 +91,14 @@ class Vesting:
             ],
         )
 
-        return HexBytes(vesting_id).hex()
+        self.vestingId = HexBytes(vesting_id).hex()
+        return self.vestingId
+
+
+class EnhancedJSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if dataclasses.is_dataclass(o):
+            return dataclasses.asdict(o)
+        elif isinstance(o, VestingType):
+            return o.name.lower()
+        return super().default(o)

@@ -1,86 +1,59 @@
 import csv
 import os
+from typing import Dict, List
 
-import sqlalchemy.orm as orm
 from addresses import get_airdrop_addresses
-from database import VestingModel
 from dateutil.parser import parse
-from vesting import Vesting
+from vesting import Vesting, VestingType
 from web3 import Web3
 
 CURRENT_DIRECTORY = os.path.dirname(__file__)
 
 
-def parse_vestings_csv(
-    db: orm.Session,
-    type: str,
-    chain_id: int,
-    verbose: bool,
-    start_date: int,
-    duration: int,
-):
-    vesting_file = {
-        "user": os.path.join(CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop.csv"),
-        "user_v2": os.path.join(
-            CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop_v2.csv"
-        ),
-        "ecosystem": os.path.join(
-            CURRENT_DIRECTORY, f"assets/{chain_id}/ecosystem_airdrop.csv"
-        ),
-        "investor": os.path.join(
-            CURRENT_DIRECTORY, f"assets/{chain_id}/investor_vestings.csv"
-        ),
-    }.get(type)
-    if not vesting_file:
-        raise ValueError(f"Not a valid vestings type: {type}")
-
-    if not os.path.exists(vesting_file):
-        print(vesting_file, "does not exist")
-
+def read_vesting_file(
+    vesting_file: str, chain_id: int, vesting_type: VestingType
+) -> List[Vesting]:
+    vestings: List[Vesting] = []
+    airdrop_address = Web3.to_checksum_address(
+        get_airdrop_addresses(chain_id)[vesting_type]
+    )
     with open(vesting_file, mode="r") as csv_file:
         csv_reader = csv.DictReader(csv_file)
-        line_count = 0
 
         print(80 * "-")
-        print(f"Processing {type} vestings")
-        print(80 * "-")
-
-        vesting_models = []
+        print(f"Processing {vesting_type.name} vestings")
 
         for row in csv_reader:
             owner = Web3.to_checksum_address(row["owner"])
-
             duration_weeks: int
-            if duration is not None:
-                duration_weeks = duration
-            else:
-                if "duration" in row.keys():
-                    duration_weeks = int(row["duration"])
-                else:
-                    if type == "user_v2":
-                        duration_weeks = 208
-                    else:
-                        duration_weeks = 416
-
             start_date_timestamp: int
-            if start_date is not None:
-                start_date_timestamp = start_date
+
+            if "duration" in row.keys():
+                duration_weeks = int(row["duration"])
             else:
-                if "startDate" in row.keys():
-                    start_date_timestamp = parse(row["startDate"]).timestamp()
+                if vesting_type in (VestingType.USER_V2, VestingType.INVESTOR):
+                    duration_weeks = 208
                 else:
-                    if type == "user_v2":
-                        start_date_timestamp = parse(
-                            "2022-09-01T10:00:00+00:00"
-                        ).timestamp()
-                    else:
-                        start_date_timestamp = parse(
-                            "2018-07-14T00:00:00+00:00"
-                        ).timestamp()
-            start_date_timestamp = int(start_date_timestamp)
+                    duration_weeks = 416
+
+            if "startDate" in row.keys():
+                start_date_timestamp = int(parse(row["startDate"]).timestamp())
+            else:
+                if vesting_type == VestingType.USER_V2:
+                    start_date_timestamp = int(
+                        parse("2022-09-01T10:00:00+00:00").timestamp()
+                    )
+                elif vesting_type == VestingType.INVESTOR:
+                    start_date_timestamp = int(
+                        parse("2022-10-01T10:00:00+00:00").timestamp()
+                    )
+                else:
+                    start_date_timestamp = int(
+                        parse("2018-07-14T00:00:00+00:00").timestamp()
+                    )
 
             # For user_v2, amount has decimals
-            if type == "user_v2":
+            if vesting_type == VestingType.USER_V2:
                 amount = str(Web3.to_wei(row["amount"], "ether"))
             else:
                 amount = row["amount"]
@@ -89,47 +62,54 @@ def parse_vestings_csv(
 
             vesting = Vesting(
                 None,
-                type,
+                vesting_type,
                 owner,
+                airdrop_address,
+                chain_id,
                 curve_type,
                 duration_weeks,
                 start_date_timestamp,
                 amount,
-                None,
+                [],
             )
+            vestings.append(vesting)
 
-            airdrop_address = get_airdrop_addresses(chain_id)[type]
-
-            calculated_vesting_id = vesting.calculateHash(airdrop_address, chain_id)
-
-            vesting_id: str
+            calculated_vesting_id = vesting.calculateHash()
 
             if "vestingId" in row.keys():
                 vesting_id = row["vestingId"]
                 if vesting_id != calculated_vesting_id:
                     raise ValueError("provided and calculated vesting id do not match!")
-            else:
-                vesting_id = calculated_vesting_id
 
-            vesting_model = VestingModel(
-                vesting_id=vesting_id,
-                chain_id=chain_id,
-                type=type,
-                owner=owner,
-                curve_type=curve_type,
-                duration_weeks=duration_weeks,
-                start_date=start_date_timestamp,
-                amount=amount,
-            )
+        print(f"Processed {len(vestings)} {vesting_type} vestings.")
+        print(80 * "-")
+        return vestings
 
-            vesting_models.append(vesting_model)
 
-            if verbose:
-                print(f"[{type}] {owner}: {vesting_id}")
+def parse_vestings_csv(chain_id: int) -> Dict[VestingType, List[Vesting]]:
+    vesting_type_with_vestings = {}
+    for vesting_type in VestingType:
+        vesting_file = {
+            VestingType.USER: os.path.join(
+                CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop.csv"
+            ),
+            VestingType.USER_V2: os.path.join(
+                CURRENT_DIRECTORY, f"assets/{chain_id}/user_airdrop_v2.csv"
+            ),
+            VestingType.ECOSYSTEM: os.path.join(
+                CURRENT_DIRECTORY, f"assets/{chain_id}/ecosystem_airdrop.csv"
+            ),
+            VestingType.INVESTOR: os.path.join(
+                CURRENT_DIRECTORY, f"assets/{chain_id}/investor_vestings.csv"
+            ),
+        }.get(vesting_type)
+        if not vesting_file:
+            raise ValueError(f"Not a valid vestings type: {vesting_type}")
 
-            line_count += 1
+        if not os.path.exists(vesting_file):
+            print(vesting_file, "does not exist")
 
-        db.bulk_save_objects(vesting_models)
-        db.commit()
-
-        print(f"Processed {line_count} {type} vestings.")
+        vesting_type_with_vestings[vesting_type] = read_vesting_file(
+            vesting_file, chain_id, vesting_type
+        )
+    return vesting_type_with_vestings

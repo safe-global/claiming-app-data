@@ -1,10 +1,9 @@
 import json
 import unittest
-import uuid
 
-from database import get_db, prepare_db
-from exporter import Export, VestingEncoder, export_data, process_vestings
+from exporter import export_data
 from merkle_proof import generate_vestings_tree
+from vesting import EnhancedJSONEncoder
 
 
 class MerkleProof(unittest.TestCase):
@@ -89,33 +88,19 @@ class MerkleProof(unittest.TestCase):
 
 class TestExporter(unittest.TestCase):
     def test_export_data(self):
-        random_filename = str(uuid.uuid4())
-        db_path = f"/tmp/{random_filename}"
-        # Prepare database
-        prepare_db(db_path)
-        db = next(get_db(db_path))
-
         chain_id = 5
         output_dir = "/tmp"
-        verbose = False
-        export = Export.allocations
-
-        start_date = None
-        duration = None
-        process_vestings(db, chain_id, verbose, start_date, duration)
-
-        accounts_with_vestings = export_data(
-            db,
-            chain_id,
-            output_dir,
-            verbose,
-            export,
-        )
-
-        self.assertEqual(len(accounts_with_vestings), 21)
+        result = export_data(chain_id, output_dir)
+        self.assertEqual(len(result), 25)
         expected = [
             {
-                "proof": [],
+                "proof": [
+                    "0x1d410293e77b8b9635316dc45340a45ba675215f47dd873692e172887ce18fea",
+                    "0xfa05773e3ca886087349aecea74c48d6da4f3dbfa1f87a508dbe57b74bb63a7b",
+                    "0xe5887dc5d86590ae492aa079d74dd1e4ae71e5c1bf9102e8204e7a5cca19e4fb",
+                    "0xeda9bdf33a6979732aba5516530e74c3f260df61ac1e1b694c9d2ac57db8967b",
+                    "0x4e8d97dc8a6dc7675b30eca1d727af9dd4a9e68c217b28a8b5c4ae9786154ab0",
+                ],
                 "tag": "user",
                 "account": "0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e",
                 "chainId": 5,
@@ -127,7 +112,12 @@ class TestExporter(unittest.TestCase):
                 "curve": 0,
             },
             {
-                "proof": [],
+                "proof": [
+                    "0xf8a2e42f647dd4e0b90394d955aa4bd7063e3053a115926b7c18425a5878b6a5",
+                    "0x61a38659090ab7378ecc0c759fefcaa1487489f6dead80fc3bc037095203e3ee",
+                    "0x281e9632c9747a34a71f75f021ecc99a6be79a069e484fc57a0784d9b8051a51",
+                    "0x9694aa998d931301470574c815a916f28048742cca628b9d8c1fa0cfa25ec752",
+                ],
                 "tag": "user_v2",
                 "account": "0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e",
                 "chainId": 5,
@@ -139,7 +129,12 @@ class TestExporter(unittest.TestCase):
                 "curve": 0,
             },
             {
-                "proof": [],
+                "proof": [
+                    "0x2159b632753750f7af794d9421ae02a2f39d93d5e064fc71c4b9a426a54616d3",
+                    "0x111bad1b240db7f5f397fe7f415b3766841dc4e95d808b59bcceb039fcefa29a",
+                    "0xc1f8b655e82ccea0967f0725cad306af872fa00f4b870879a0192d7dbffdaf12",
+                    "0xfc49350295aa7ec31fb189769057ee99a33591a5d282096a9962195412f80632",
+                ],
                 "tag": "ecosystem",
                 "account": "0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e",
                 "chainId": 5,
@@ -154,9 +149,9 @@ class TestExporter(unittest.TestCase):
 
         data = json.loads(
             json.dumps(
-                accounts_with_vestings["0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e"],
+                result["0x5f310dc66F4ecDE9a1769f1B7D75224dA592201e"],
                 indent=4,
-                cls=VestingEncoder,
+                cls=EnhancedJSONEncoder,
             )
         )
         self.assertEqual(data, expected)
