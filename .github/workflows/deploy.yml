@@ -49,16 +49,11 @@ jobs:
           python import_guardians.py
           cd ..
 
-      - name: 'Process vesting data'
+      - name: 'Export vesting data'
         if: startsWith(github.ref, 'refs/tags/v')
         run: |
-          cd vestings
-          python exporter.py --clear-db --chain-id 5 --process-vestings --generate-proofs
-          python exporter.py --chain-id 5 --process-investor-vestings --start-date 1664582400 --duration 208 --export allocations
-          python exporter.py --chain-id 5 --export snapshot
-          python exporter.py --clear-db --chain-id 1 --process-vestings --process-investor-vestings --generate-proofs --export allocations
-          python exporter.py --chain-id 1 --export snapshot
-          cd ..
+          python vestings/exporter.py --chain-id 1 --output-directory data/allocations
+          python vestings/exporter.py --chain-id 5 --output-directory data/allocations
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
