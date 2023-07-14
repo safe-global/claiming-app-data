@@ -10,24 +10,25 @@ from constants import (
     MAINNET_USER_AIRDROP_ADDRESS,
     MAINNET_USER_V2_AIRDROP_ADDRESS,
 )
-from eth_typing import ChecksumAddress
+from hexbytes import HexBytes
+from vesting import VestingType
 
 
-def get_airdrop_addresses(chain_id: int) -> Dict[str, Dict[int, ChecksumAddress]]:
+def get_airdrop_addresses(chain_id: int) -> Dict[str, Dict[int, HexBytes]]:
     return {
-        "user": {
+        VestingType.USER: {
             1: MAINNET_USER_AIRDROP_ADDRESS,
             5: GOERLI_USER_AIRDROP_ADDRESS,
         }[chain_id],
-        "user_v2": {
+        VestingType.USER_V2: {
             1: MAINNET_USER_V2_AIRDROP_ADDRESS,
             5: GOERLI_USER_V2_AIRDROP_ADDRESS,
         }[chain_id],
-        "ecosystem": {
+        VestingType.ECOSYSTEM: {
             1: MAINNET_ECOSYSTEM_AIRDROP_ADDRESS,
             5: GOERLI_ECOSYSTEM_AIRDROP_ADDRESS,
         }[chain_id],
-        "investor": {
+        VestingType.INVESTOR: {
             1: MAINNET_INVESTOR_VESTING_POOL_ADDRESS,
             5: GOERLI_INVESTOR_VESTING_POOL_ADDRESS,
         }[chain_id],

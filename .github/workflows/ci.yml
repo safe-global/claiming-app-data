@@ -47,4 +47,4 @@ jobs:
       - name: Run tests
         run: |
           python vestings/tests.py
-          python vestings/exporter.py --chain-id 5 --output-directory ./ --process-vestings --generate-proofs --export allocations
+          python vestings/exporter.py --chain-id 5 --output-directory data/allocations
