@@ -60,6 +60,6 @@ jobs:
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || github.ref == 'fix-deploy-guardians'
         run: |
           aws s3 sync data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/current/guardians --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
