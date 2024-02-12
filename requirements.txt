@@ -9,4 +9,4 @@ python-dateutil==2.8.2
 # converting SVGs
 svglib==1.5.1
 Wand==0.6.13
-web3==6.14.0
+web3==6.15.1
