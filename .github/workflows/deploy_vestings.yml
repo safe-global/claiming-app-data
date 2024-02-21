@@ -12,6 +12,7 @@ on:
         options:
           - "1"
           - "5"
+          - "11155111"
 
 env:
   REPO_NAME_ALPHANUMERIC: claiming-app-data

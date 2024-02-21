@@ -12,6 +12,7 @@ on:
         options:
           - 1
           - 5
+          - 11155111
 
 env:
   REPO_NAME_ALPHANUMERIC: claiming-app-data
@@ -20,13 +21,11 @@ env:
   INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
 
 jobs:
-
   deploy:
     name: Generating Vesting Roots
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.12.1
         with:
