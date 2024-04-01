@@ -3,7 +3,7 @@ hexbytes==0.3.0
 # multiprocessing
 joblib==1.3.2
 # converting PNGs
-Pillow==10.2.0
+Pillow==10.3.0
 # date and time
 python-dateutil==2.9.0.post0
 # converting SVGs
