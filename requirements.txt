@@ -1,5 +1,5 @@
 # working with solidity & smart contracts:
-hexbytes==0.3.0
+hexbytes==1.2.0
 # multiprocessing
 joblib==1.4.0
 # converting PNGs
