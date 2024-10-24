@@ -102,6 +102,12 @@ def parse_vestings_csv(chain_id: int) -> Dict[VestingType, List[Vesting]]:
             VestingType.INVESTOR: os.path.join(
                 CURRENT_DIRECTORY, f"assets/{chain_id}/investor_vestings.csv"
             ),
+            VestingType.SAP_BOOSTED: os.path.join(
+                CURRENT_DIRECTORY, f"assets/{chain_id}/sap_boosted_airdrop.csv"
+            ),
+            VestingType.SAP_UNBOOSTED: os.path.join(
+                CURRENT_DIRECTORY, f"assets/{chain_id}/sap_unboosted_airdrop.csv"
+            ),
         }.get(vesting_type)
         if not vesting_file:
             raise ValueError(f"Not a valid vestings type: {vesting_type}")
