@@ -14,9 +14,13 @@ def read_vesting_file(
     vesting_file: str, chain_id: int, vesting_type: VestingType
 ) -> List[Vesting]:
     vestings: List[Vesting] = []
-    airdrop_address = Web3.to_checksum_address(
-        get_airdrop_addresses(chain_id)[vesting_type]
-    )
+    airdrop_address_raw = get_airdrop_addresses(chain_id)[vesting_type]
+
+    if airdrop_address_raw is None:
+        return vestings
+
+    airdrop_address = Web3.to_checksum_address(airdrop_address_raw)
+
     with open(vesting_file, mode="r") as csv_file:
         csv_reader = csv.DictReader(csv_file)
 
@@ -102,6 +106,12 @@ def parse_vestings_csv(chain_id: int) -> Dict[VestingType, List[Vesting]]:
             VestingType.INVESTOR: os.path.join(
                 CURRENT_DIRECTORY, f"assets/{chain_id}/investor_vestings.csv"
             ),
+            VestingType.SAP_BOOSTED: os.path.join(
+                CURRENT_DIRECTORY, f"assets/{chain_id}/sap_boosted_airdrop.csv"
+            ),
+            VestingType.SAP_UNBOOSTED: os.path.join(
+                CURRENT_DIRECTORY, f"assets/{chain_id}/sap_unboosted_airdrop.csv"
+            ),
         }.get(vesting_type)
         if not vesting_file:
             raise ValueError(f"Not a valid vestings type: {vesting_type}")
@@ -109,7 +119,9 @@ def parse_vestings_csv(chain_id: int) -> Dict[VestingType, List[Vesting]]:
         if not os.path.exists(vesting_file):
             print(vesting_file, "does not exist")
 
-        vesting_type_with_vestings[vesting_type] = read_vesting_file(
-            vesting_file, chain_id, vesting_type
-        )
+        vestings = read_vesting_file(vesting_file, chain_id, vesting_type)
+
+        if vestings:
+            vesting_type_with_vestings[vesting_type] = vestings
+
     return vesting_type_with_vestings

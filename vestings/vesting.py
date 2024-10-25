@@ -17,6 +17,8 @@ class VestingType(Enum):
     USER_V2 = 1
     ECOSYSTEM = 2
     INVESTOR = 3
+    SAP_BOOSTED = 4
+    SAP_UNBOOSTED = 5
 
 
 @cache
