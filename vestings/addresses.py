@@ -44,8 +44,8 @@ def get_airdrop_addresses(chain_id: int) -> Dict[str, Dict[int, HexBytes]]:
         }[chain_id],
         VestingType.SAP_BOOSTED: {
             11155111: SEPOLIA_SAP_BOOSTED_AIRDROP_ADDRESS,
-        }[chain_id],
+        }.get(chain_id),
         VestingType.SAP_UNBOOSTED: {
             11155111: SEPOLIA_SAP_UNBOOSTED_AIRDROP_ADDRESS,
-        }[chain_id],
+        }.get(chain_id),
     }
