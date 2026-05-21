@@ -7,6 +7,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  actions: write
+
 env:
   REPO_NAME_ALPHANUMERIC: claiming-app-data
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_BUCKET_NAME }}
