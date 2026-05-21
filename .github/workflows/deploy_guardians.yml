@@ -26,7 +26,7 @@ jobs:
     steps:
 
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.1
+        uses: styfle/cancel-workflow-action@85880fa0301c86cca9da44039ee3bb12d3bedbfa  # 0.12.1
         with:
           access_token: ${{ github.token }}
 
@@ -35,9 +35,9 @@ jobs:
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5
         with:
           python-version: "3.11"
           cache: "pip"
@@ -56,7 +56,7 @@ jobs:
           cd ..
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a  # v4
         with:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
