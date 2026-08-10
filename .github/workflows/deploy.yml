@@ -13,7 +13,6 @@ permissions:
 env:
   REPO_NAME_ALPHANUMERIC: claiming-app-data
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_BUCKET_NAME }}
-  PROD_BUCKET_NAME: ${{ secrets.PROD_BUCKET_NAME }}
   INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
 
 jobs:
@@ -72,12 +71,3 @@ jobs:
         run: |
           aws s3 sync data/guardians/ s3://${{ secrets.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }}/guardians --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
           aws s3 sync data/allocations/ s3://${{ secrets.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }}/allocations --delete --cache-control max-age=0,no-cache,no-store,must-revalidate
-
-      # Script to prepare production deployments
-      - name: 'Prepare production deployment flow'
-        if: success() && startsWith(github.ref, 'refs/tags/v')
-        run: bash ./scripts/github/prepare_production_deployment.sh
-        env:
-          PROD_DEPLOYMENT_HOOK_TOKEN: ${{ secrets.PROD_DEPLOYMENT_HOOK_TOKEN }}
-          PROD_DEPLOYMENT_HOOK_URL: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
-          VERSION_TAG: ${{ github.event.release.tag_name }}
