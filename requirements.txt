@@ -4,6 +4,6 @@ Pillow==10.3.0
 # date and time
 python-dateutil==2.9.0.post0
 # converting SVGs
-svglib==1.5.1
+svglib==2.3.1
 Wand==0.6.13
 web3==6.18.0
